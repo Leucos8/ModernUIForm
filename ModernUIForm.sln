@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+#   ModernUIForm - Small class library for creating borderless windows
+#   Copyright (C) 2014 - Leucos
+#
+#   ModernUIForm is free software: you can redistribute it and/or modify it under
+#   the terms of the GNU Lesser General Public License as published by the Free
+#   Software Foundation, either version 3 of the License, or (at your option) any
+#   later version.
+#
+#   ModernUIForm is distributed in the hope that it will be useful, but WITHOUT ANY
+#   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+#   PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License along with 
+#   ModernUIForm. If not, see <http://www.gnu.org/licenses/>.
+#
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ModernUIForm", "ModernUIForm\ModernUIForm.vbproj", "{2BFC06C0-7B19-488F-B04D-E6449132B885}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TestForm", "TestForm\TestForm.vbproj", "{06BEB809-0CDF-402F-9D58-7E0468C54525}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2BFC06C0-7B19-488F-B04D-E6449132B885} = {2BFC06C0-7B19-488F-B04D-E6449132B885}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2BFC06C0-7B19-488F-B04D-E6449132B885}.Debug|x86.ActiveCfg = Debug|x86
+		{2BFC06C0-7B19-488F-B04D-E6449132B885}.Debug|x86.Build.0 = Debug|x86
+		{2BFC06C0-7B19-488F-B04D-E6449132B885}.Release|x86.ActiveCfg = Release|x86
+		{2BFC06C0-7B19-488F-B04D-E6449132B885}.Release|x86.Build.0 = Release|x86
+		{06BEB809-0CDF-402F-9D58-7E0468C54525}.Debug|x86.ActiveCfg = Debug|x86
+		{06BEB809-0CDF-402F-9D58-7E0468C54525}.Debug|x86.Build.0 = Debug|x86
+		{06BEB809-0CDF-402F-9D58-7E0468C54525}.Release|x86.ActiveCfg = Release|x86
+		{06BEB809-0CDF-402F-9D58-7E0468C54525}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
