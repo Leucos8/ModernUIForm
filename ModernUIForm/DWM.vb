@@ -16,14 +16,17 @@
 Imports System.Runtime.InteropServices
 Imports System.Drawing
 
-Public Class DWM
-    <StructLayout(LayoutKind.Sequential)>
-    Public Structure MARGINS
-        Public cxLeftWidth As Integer
-        Public cxRightWidth As Integer
-        Public cyTopHeight As Integer
-        Public cyBottomHeight As Integer
-        Public Sub New(Left As Integer, Right As Integer, Top As Integer, Bottom As Integer)
+Friend Class DWM
+    ''' <summary>
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/bb773244%28v=vs.85%29.aspx
+    ''' </summary>
+    <StructLayout(LayoutKind.Sequential)> _
+    Friend Structure MARGINS
+        Friend cxLeftWidth As Integer
+        Friend cxRightWidth As Integer
+        Friend cyTopHeight As Integer
+        Friend cyBottomHeight As Integer
+        Friend Sub New(Left As Integer, Right As Integer, Top As Integer, Bottom As Integer)
             Me.cxLeftWidth = Left
             Me.cxRightWidth = Right
             Me.cyTopHeight = Top
@@ -31,18 +34,78 @@ Public Class DWM
         End Sub
     End Structure
 
+    ''' <summary>
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/aa969507%28v=vs.85%29.aspx
+    ''' </summary>
+    ''' <param name="hwnd"></param>
+    ''' <param name="msg"></param>
+    ''' <param name="wParam"></param>
+    ''' <param name="lParam"></param>
+    ''' <param name="plResult"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     <DllImport("dwmapi.dll")> _
-    Public Shared Function DwmExtendFrameIntoClientArea(ByVal hdc As IntPtr, ByRef marInset As MARGINS) As Integer
-    End Function
-    <DllImport("dwmapi.dll")> _
-    Public Shared Function DwmIsCompositionEnabled(ByRef pfEnabled As Boolean) As Integer
-    End Function
-    <DllImport("dwmapi.dll")> _
-    Public Shared Function DwmDefWindowProc(ByVal hwnd As IntPtr, ByVal msg As UInt16, ByVal wParam As Long, ByVal lParam As Long, <Out> ByRef plResult As Integer) As Integer
+    Friend Shared Function DwmDefWindowProc(<[In]> ByVal hwnd As IntPtr, ByVal msg As Integer, ByVal wParam As IntPtr, ByVal lParam As IntPtr, <Out> ByRef plResult As IntPtr) As <MarshalAs(UnmanagedType.I1)> Boolean
     End Function
 
-    Public Const WM_NCHITTEST As Integer = &H84
-    Public Const HTCLIENT As Integer = 1
-    Public Const HTCAPTION As Integer = 2
+    ''' <summary>
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/aa969512%28v=vs.85%29.aspx
+    ''' </summary>
+    ''' <param name="hWnd"></param>
+    ''' <param name="marInset"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    <DllImport("dwmapi.dll")> _
+    Friend Shared Function DwmExtendFrameIntoClientArea(ByVal hWnd As IntPtr, <[In]> ByRef marInset As MARGINS) As Integer
+    End Function
+    ''' <summary>
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/aa969518%28v=vs.85%29.aspx
+    ''' </summary>
+    ''' <param name="pfEnabled"></param>
+    ''' <returns></returns>
+    <DllImport("dwmapi.dll")> _
+    Friend Shared Function DwmIsCompositionEnabled(<MarshalAs(UnmanagedType.I1)> <Out> ByRef pfEnabled As Boolean) As Integer
+    End Function
 
+    ''' <summary>
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/ms632634%28v=vs.85%29.aspx
+    ''' </summary>
+    Friend Const WM_NCCALCSIZE As Integer = &H83
+    ''' <summary>
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/ms645618%28v=vs.85%29.aspx
+    ''' </summary>
+    ''' <remarks></remarks>
+    Friend Const WM_NCHITTEST As Integer = &H84
+    ''' <summary>
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/ms632606%28v=vs.85%29.aspx
+    ''' </summary>
+    Friend Structure NCCALCSIZE_PARAMS
+        Friend rect0 As RECT
+        Friend rect1 As RECT
+        Friend rect2 As RECT
+        Friend lppos As WINDOWPOS
+    End Structure
+    ''' <summary>
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/dd162897%28v=vs.85%29.aspx
+    ''' </summary>
+    ''' <remarks></remarks>
+    Friend Structure RECT
+        Friend left As Long
+        Friend top As Long
+        Friend right As Long
+        Friend bottom As Long
+    End Structure
+
+    ''' <summary>
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/ms632612%28v=vs.85%29.aspx
+    ''' </summary>
+    Friend Structure WINDOWPOS
+        Friend hwnd As IntPtr
+        Friend hwndInsertAfter As IntPtr
+        Friend x As Integer
+        Friend y As Integer
+        Friend cx As Integer
+        Friend cy As Integer
+        Friend flags As UInteger
+    End Structure
 End Class
