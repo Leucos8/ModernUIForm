@@ -27,7 +27,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Small class library for creating borderless windows")> 
 <Assembly: AssemblyCompany("Leucos")> 
 <Assembly: AssemblyProduct("ModernUIForm")> 
-<Assembly: AssemblyCopyright("Copyright 2014")> 
+<Assembly: AssemblyCopyright("Copyright 2014 Leucos")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>

@@ -24,10 +24,10 @@ Imports System.Runtime.InteropServices
 ' Controllare i valori degli attributi dell'assembly
 
 <Assembly: AssemblyTitle("TestForm")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("TestForm")> 
-<Assembly: AssemblyCopyright("Copyright ©  2014")> 
+<Assembly: AssemblyDescription("An example form for ModernUIForm")> 
+<Assembly: AssemblyCompany("Leucos")> 
+<Assembly: AssemblyProduct("ModernUIForm")> 
+<Assembly: AssemblyCopyright("Copyright 2014 Leucos")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
