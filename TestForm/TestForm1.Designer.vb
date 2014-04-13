@@ -37,9 +37,28 @@ Partial Class TestForm1
     'Non modificarla nell'editor del codice.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        components = New System.ComponentModel.Container()
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Text = "Form1"
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.SuspendLayout()
+        '
+        'Panel1
+        '
+        Me.Panel1.BackColor = System.Drawing.Color.Transparent
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(4, 4)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(276, 48)
+        Me.Panel1.TabIndex = 1
+        '
+        'TestForm1
+        '
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
+        Me.ClientSize = New System.Drawing.Size(284, 238)
+        Me.Controls.Add(Me.Panel1)
+        Me.Name = "TestForm1"
+        Me.ResumeLayout(False)
+
     End Sub
+    Private WithEvents Panel1 As System.Windows.Forms.Panel
 
 End Class

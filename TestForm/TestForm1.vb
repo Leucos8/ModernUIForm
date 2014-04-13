@@ -14,5 +14,12 @@
 '   ModernUIForm. If not, see <http://www.gnu.org/licenses/>.
 
 Public Class TestForm1
+    Public Sub New()
 
+        ' Chiamata richiesta dalla finestra di progettazione.
+        InitializeComponent()
+
+        ' Aggiungere le eventuali istruzioni di inizializzazione dopo la chiamata a InitializeComponent().
+        Me.AddControlToFormHitTest(Me.Panel1)
+    End Sub
 End Class
