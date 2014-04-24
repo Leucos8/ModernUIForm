@@ -169,6 +169,11 @@ Public Class TemplateForm
         'e.Graphics.DrawRectangle(Pens.Green, _RBT.Width, _RBT.Height, Width - _RBT.Width * 2, Height - _RBT.Height * 2)
     End Sub
 
+    ''' <summary>
+    ''' Overrides default Windows message handling.
+    ''' http://msdn.microsoft.com/it-it/library/system.windows.forms.control.wndproc%28v=vs.110%29.aspx
+    ''' </summary>
+    ''' <param name="m">The Windows Message to process</param>
     Protected Overrides Sub WndProc(ByRef m As Message)
         Dim result As IntPtr
 
@@ -227,11 +232,11 @@ Public Class TemplateForm
 
     Private Function HitTestNCA(lParam As IntPtr) As IntPtr
         Dim p As New Point(CInt(lParam) And &HFFFF, (CInt(lParam) >> 16) And &HFFFF)
-        p = p - New Size(Me.Location)
         Return HitTestNCA(p)
     End Function
 
     Private Function HitTestNCA(CursorPosition As Point) As IntPtr
+        CursorPosition = CursorPosition - New Size(Me.Location)
         Dim tmpRBT As New Size(0, 0)
         If Me.IsResizable AndAlso (Me.WindowState = FormWindowState.Normal) Then
             tmpRBT = _RBT
@@ -304,7 +309,7 @@ Public Class TemplateForm
 
     Private Sub ExtendHitTest_MouseMove(sender As Object, e As MouseEventArgs)
         Try
-            Dim result As IntPtr = HitTestNCA(e.Location + New Size(CType(sender, Control).Location))
+            Dim result As IntPtr = HitTestNCA(Cursor.Position)
             ReleaseCapture()
             If e.Button = Windows.Forms.MouseButtons.Left Then
                 WinAPI.SendMessage(Handle, Win32Messages.WM_NCLBUTTONDOWN, result, Nothing)
@@ -329,13 +334,18 @@ Public Class TemplateForm
     End Sub
 
     Private Sub ExtendHitTest_MouseDoubleClick(sender As Object, e As EventArgs)
-        Dim result As IntPtr = HitTestNCA(Cursor.Position - New Size(Location))
+        Dim result As IntPtr = HitTestNCA(Cursor.Position)
         ReleaseCapture()
         WinAPI.SendMessage(Handle, Win32Messages.WM_NCLBUTTONDBLCLK, result, Nothing)
+    End Sub
+
+    Private Sub ExtendHitTest_MouseLeave(sender As Object, e As EventArgs)
+        CType(sender, Control).Cursor = Cursors.Default
     End Sub
 
     Public Sub AddControlToFormHitTest(c As Control)
         AddHandler c.MouseMove, AddressOf ExtendHitTest_MouseMove
         AddHandler c.DoubleClick, AddressOf ExtendHitTest_MouseDoubleClick
+        AddHandler c.MouseLeave, AddressOf ExtendHitTest_MouseLeave
     End Sub
 End Class
