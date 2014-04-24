@@ -146,14 +146,26 @@ Public Class TemplateForm
         End If
 
         MyBase.OnActivated(e)
-        Me.Refresh()
+
+        Me.InvalidateFrame()
     End Sub
 
     Protected Overrides Sub OnDeactivate(e As EventArgs)
         CaptionBGCurrent = _CaptionBGInactive
         BorderBGCurrent = _BorderBGInactive
         MyBase.OnDeactivate(e)
-        Me.Refresh()
+
+        Me.InvalidateFrame()
+    End Sub
+
+    Private Sub InvalidateFrame()
+        Dim HTValues() As HitTest = {HitTest.HTCAPTION, _
+                                     HitTest.HTLEFT, HitTest.HTRIGHT, _
+                                     HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
+                                     HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT}
+        For i As Integer = 0 To HTValues.Count - 1
+            Me.Invalidate(Me.GetFrameRectangle(HTValues(i)))
+        Next i
     End Sub
 
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
@@ -161,19 +173,16 @@ Public Class TemplateForm
         'Caption brush
         Dim b As New SolidBrush(CaptionBGCurrent)
         'Caption
-        e.Graphics.FillRectangle(b, _
-                                 _dwmNCAMargins.cxLeftWidth, _dwmNCAMargins.cyTopHeight, _
-                                 Me.Width - _dwmNCAMargins.cxLeftWidth - _dwmNCAMargins.cxRightWidth, _captionHeight)
+        e.Graphics.FillRectangle(b, Me.GetFrameRectangle(HitTest.HTCAPTION))
         'Border brush
         b = New SolidBrush(BorderBGCurrent)
-        'Top border
-        e.Graphics.FillRectangle(b, 0, 0, Me.Width, _dwmNCAMargins.cyTopHeight)
-        'Bottom border
-        e.Graphics.FillRectangle(b, 0, Me.Height - _dwmNCAMargins.cyBottomHeight, Me.Width, _dwmNCAMargins.cyBottomHeight)
-        'Left border
-        e.Graphics.FillRectangle(b, 0, 0, _dwmNCAMargins.cxLeftWidth, Me.Height)
-        'Right border
-        e.Graphics.FillRectangle(b, Width - _dwmNCAMargins.cxRightWidth, 0, _dwmNCAMargins.cxRightWidth, Height)
+
+        Dim HTValues() As HitTest = {HitTest.HTLEFT, HitTest.HTRIGHT, _
+                                     HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
+                                     HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT}
+        For i As Integer = 0 To HTValues.Count - 1
+            e.Graphics.FillRectangle(b, Me.GetFrameRectangle(HTValues(i)))
+        Next i
         'e.Graphics.DrawLine(Pens.Red, 0, 0, Width, Height)
         'e.Graphics.DrawRectangle(Pens.Green, _RBT.Width, _RBT.Height, Width - _RBT.Width * 2, Height - _RBT.Height * 2)
     End Sub
@@ -248,71 +257,17 @@ Public Class TemplateForm
 
     Private Function HitTestNCA(CursorPosition As Point) As Integer
         CursorPosition = CursorPosition - New Size(Me.Location)
-        Dim tmpRBT As New Size(0, 0)
-        If Me.IsResizable AndAlso (Me.WindowState = FormWindowState.Normal) Then
-            tmpRBT = _RBT
-        End If
 
-        Dim hitRect As New Rectangle(tmpRBT.Width, tmpRBT.Height + _captionHeight, _
-                                     Width - tmpRBT.Height * 2, Height - _captionHeight - tmpRBT.Width * 2)
-
-        'Client
-        If hitRect.Contains(CursorPosition) Then
-            Return HitTest.HTCLIENT
-        End If
-        'Caption
-        hitRect.Y = tmpRBT.Height
-        hitRect.Height = _captionHeight
-        If hitRect.Contains(CursorPosition) Then
-            Return HitTest.HTCAPTION
-        End If
-        'Top
-        hitRect.Y = 0
-        hitRect.Height = tmpRBT.Width
-        If hitRect.Contains(CursorPosition) Then
-            Return HitTest.HTTOP
-        End If
-        'Bottom
-        hitRect.Y = Height - tmpRBT.Width
-        If hitRect.Contains(CursorPosition) Then
-            Return HitTest.HTBOTTOM
-        End If
-        'Left
-        hitRect.X = 0
-        hitRect.Y = tmpRBT.Height
-        hitRect.Width = tmpRBT.Width
-        hitRect.Height = Height - tmpRBT.Height * 2
-        If hitRect.Contains(CursorPosition) Then
-            Return HitTest.HTLEFT
-        End If
-        'Right
-        hitRect.X = Width - tmpRBT.Width
-        If hitRect.Contains(CursorPosition) Then
-            Return HitTest.HTRIGHT
-        End If
-        'TopLeft
-        hitRect.X = 0
-        hitRect.Y = 0
-        hitRect.Width = tmpRBT.Width
-        hitRect.Height = tmpRBT.Height
-        If hitRect.Contains(CursorPosition) Then
-            Return HitTest.HTTOPLEFT
-        End If
-        'TopRight
-        hitRect.X = Width - tmpRBT.Width
-        If hitRect.Contains(CursorPosition) Then
-            Return HitTest.HTTOPRIGHT
-        End If
-        'BottomRight
-        hitRect.Y = Height - tmpRBT.Width
-        If hitRect.Contains(CursorPosition) Then
-            Return HitTest.HTBOTTOMRIGHT
-        End If
-        'BottomLeft
-        hitRect.X = 0
-        If hitRect.Contains(CursorPosition) Then
-            Return HitTest.HTBOTTOMLEFT
-        End If
+        Dim HTValues() As HitTest = {HitTest.HTCLIENT, HitTest.HTCAPTION, _
+                                     HitTest.HTLEFT, HitTest.HTRIGHT, _
+                                     HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
+                                     HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT}
+        For i As Integer = 0 To HTValues.Count - 1
+            If Me.GetHitTestRectangle(HTValues(i)).Contains(CursorPosition) Then
+                Return HTValues(i)
+                Exit For
+            End If
+        Next i
 
         Return HitTest.HTNOWHERE
 
@@ -320,31 +275,24 @@ Public Class TemplateForm
 #End Region
 
 #Region "Hit testing extension events"
-    Private Sub HisTestingExtension_MouseMove(sender As Object, e As MouseEventArgs)
+    Private Sub HitTestingExtension_MouseMove(sender As Object, e As MouseEventArgs)
         Dim result As Integer = HitTestNCA(Cursor.Position)
-        Try
-            Dim c As Control = CType(sender, Control)
-            Select Case CInt(result)
-                Case HitTest.HTTOP, HitTest.HTBOTTOM : CType(sender, Control).Cursor = Cursors.SizeNS
-                Case HitTest.HTLEFT, HitTest.HTRIGHT : CType(sender, Control).Cursor = Cursors.SizeWE
-                Case HitTest.HTTOPLEFT, HitTest.HTBOTTOMRIGHT : CType(sender, Control).Cursor = Cursors.SizeNWSE
-                Case HitTest.HTTOPRIGHT, HitTest.HTBOTTOMLEFT : CType(sender, Control).Cursor = Cursors.SizeNESW
-                Case HitTest.HTCAPTION : CType(sender, Control).Cursor = Cursors.Default
-            End Select
-        Catch ex As Exception
-            Exit Sub
-        End Try
+        Dim c As Control = CType(sender, Control)
+        Select Case result
+            Case HitTest.HTTOP, HitTest.HTBOTTOM : CType(sender, Control).Cursor = Cursors.SizeNS
+            Case HitTest.HTLEFT, HitTest.HTRIGHT : CType(sender, Control).Cursor = Cursors.SizeWE
+            Case HitTest.HTTOPLEFT, HitTest.HTBOTTOMRIGHT : CType(sender, Control).Cursor = Cursors.SizeNWSE
+            Case HitTest.HTTOPRIGHT, HitTest.HTBOTTOMLEFT : CType(sender, Control).Cursor = Cursors.SizeNESW
+            Case HitTest.HTCAPTION : CType(sender, Control).Cursor = Cursors.Default
+        End Select
 
-        ReleaseCapture()
         If e.Button = Windows.Forms.MouseButtons.Left Then
             WinAPI.SendMessage(Handle, Win32Messages.WM_NCLBUTTONDOWN, result, 0)
         End If
-
-        Exit Sub
+        WinAPI.ReleaseCapture()
     End Sub
 
-    Private Sub HisTestingExtension_MouseUp(sender As Object, e As EventArgs)
-        WinAPI.ReleaseCapture()
+    Private Sub HitTestingExtension_MouseUp(sender As Object, e As EventArgs)
         If e.GetType = GetType(MouseEventArgs) AndAlso _
             CInt(HitTestNCA(Cursor.Position)) = HitTest.HTCAPTION AndAlso
             CType(e, MouseEventArgs).Button = Windows.Forms.MouseButtons.Right Then
@@ -354,22 +302,66 @@ Public Class TemplateForm
             result = WinAPI.TrackPopupMenu(sysMenu, TPM.TPM_RETURNCMD, Cursor.Position.X, Cursor.Position.Y, 0, Me.Handle, New RECT)
             WinAPI.PostMessage(Me.Handle, Win32Messages.WM_SYSCOMMAND, result, 0)
         End If
+        WinAPI.ReleaseCapture()
     End Sub
 
-    Private Sub HisTestingExtension_MouseDoubleClick(sender As Object, e As EventArgs)
-        Dim result As Integer = HitTestNCA(Cursor.Position)
-        WinAPI.SendMessage(Handle, Win32Messages.WM_NCLBUTTONDBLCLK, result, 0)
+    Private Sub HitTestingExtension_MouseDoubleClick(sender As Object, e As EventArgs)
+        WinAPI.SendMessage(Handle, Win32Messages.WM_NCLBUTTONDBLCLK, HitTestNCA(Cursor.Position), 0)
     End Sub
 
-    Private Sub HisTestingExtension_MouseLeave(sender As Object, e As EventArgs)
+    Private Sub HitTestingExtension_MouseLeave(sender As Object, e As EventArgs)
         CType(sender, Control).Cursor = Cursors.Default
     End Sub
 
     Public Sub HitTestingAddControl(c As Control)
-        AddHandler c.MouseMove, AddressOf HisTestingExtension_MouseMove
-        AddHandler c.MouseUp, AddressOf HisTestingExtension_MouseUp
-        AddHandler c.DoubleClick, AddressOf HisTestingExtension_MouseDoubleClick
-        AddHandler c.MouseLeave, AddressOf HisTestingExtension_MouseLeave
+        AddHandler c.MouseMove, AddressOf HitTestingExtension_MouseMove
+        AddHandler c.MouseUp, AddressOf HitTestingExtension_MouseUp
+        AddHandler c.DoubleClick, AddressOf HitTestingExtension_MouseDoubleClick
+        AddHandler c.MouseLeave, AddressOf HitTestingExtension_MouseLeave
     End Sub
+#End Region
+
+#Region "GetRectangle"
+    Friend Function GetFrameRectangle(area As HitTest) As Rectangle
+        Return Me.GetFormRectangle(area, Me.DWMMargins)
+    End Function
+
+    Friend Function GetHitTestRectangle(area As HitTest) As Rectangle
+        Dim tmpRBT As New Padding(0)
+        If Me.IsResizable AndAlso (Me.WindowState = FormWindowState.Normal) Then
+            tmpRBT = New Padding(_RBT.Width, _RBT.Height, _RBT.Width, _RBT.Height)
+        End If
+
+        Return Me.GetFormRectangle(area, tmpRBT)
+    End Function
+
+    Private Function GetFormRectangle(area As HitTest, bt As Padding) As Rectangle
+
+        Select Case area
+            Case HitTest.HTCAPTION      '1
+                Return New Rectangle(bt.Left, bt.Top, Me.Width - (bt.Left + bt.Right), CaptionHeight)
+            Case HitTest.HTCLIENT       '2
+                Return New Rectangle(bt.Left, bt.Top + CaptionHeight, Me.Width - (bt.Left + bt.Right), _
+                                     Me.Height - (CaptionHeight + bt.Top + bt.Bottom))
+            Case HitTest.HTLEFT         '10
+                Return New Rectangle(0, bt.Top, bt.Left, Me.Height - (bt.Top + bt.Bottom))
+            Case HitTest.HTRIGHT        '11
+                Return New Rectangle(Me.Width - bt.Right, bt.Top, bt.Right, Me.Height - (bt.Top + bt.Bottom))
+            Case HitTest.HTTOP          '12
+                Return New Rectangle(bt.Left, 0, Me.Width - (bt.Left + bt.Right), bt.Top)
+            Case HitTest.HTTOPLEFT      '13
+                Return New Rectangle(0, 0, bt.Left, bt.Top)
+            Case HitTest.HTTOPRIGHT     '14
+                Return New Rectangle(Me.Width - bt.Right, 0, bt.Right, bt.Top)
+            Case HitTest.HTBOTTOM       '15
+                Return New Rectangle(bt.Left, Me.Height - bt.Bottom, Me.Width - (bt.Left + bt.Right), bt.Bottom)
+            Case HitTest.HTBOTTOMLEFT   '16
+                Return New Rectangle(0, Me.Height - bt.Bottom, bt.Left, bt.Bottom)
+            Case HitTest.HTBOTTOMRIGHT  '17
+                Return New Rectangle(Me.Width - bt.Right, Me.Height - bt.Bottom, bt.Right, bt.Bottom)
+            Case Else
+                Return Rectangle.Empty
+        End Select
+    End Function
 #End Region
 End Class
