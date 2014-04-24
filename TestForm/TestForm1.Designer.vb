@@ -53,7 +53,7 @@ Partial Class TestForm1
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(1, 1)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(290, 48)
+        Me.Panel1.Size = New System.Drawing.Size(298, 48)
         Me.Panel1.TabIndex = 1
         '
         'flpControlBox
@@ -63,7 +63,7 @@ Partial Class TestForm1
         Me.flpControlBox.Controls.Add(Me.ControlBoxMinimize)
         Me.flpControlBox.Controls.Add(Me.ControlBoxMaximize)
         Me.flpControlBox.Controls.Add(Me.ControlBoxClose)
-        Me.flpControlBox.Location = New System.Drawing.Point(187, 0)
+        Me.flpControlBox.Location = New System.Drawing.Point(195, 0)
         Me.flpControlBox.Margin = New System.Windows.Forms.Padding(0, 0, 6, 0)
         Me.flpControlBox.Name = "flpControlBox"
         Me.flpControlBox.Size = New System.Drawing.Size(97, 20)
@@ -123,11 +123,13 @@ Partial Class TestForm1
         Me.BorderBackColorInactive = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(100, Byte), Integer))
         Me.CaptionBackColorActive = System.Drawing.Color.DarkGray
         Me.CaptionBackColorInactive = System.Drawing.Color.DarkGray
-        Me.ClientSize = New System.Drawing.Size(292, 177)
+        Me.CaptionHeight = 48
+        Me.ClientSize = New System.Drawing.Size(300, 139)
         Me.Controls.Add(Me.Panel1)
         Me.DWMMargins = New System.Windows.Forms.Padding(1)
         Me.Name = "TestForm1"
         Me.Padding = New System.Windows.Forms.Padding(1)
+        Me.ResizeBorderThickness = New System.Drawing.Size(8, 8)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.flpControlBox.ResumeLayout(False)

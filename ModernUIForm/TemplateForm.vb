@@ -14,10 +14,9 @@
 '   ModernUIForm. If not, see <http://www.gnu.org/licenses/>.
 
 Imports System.Drawing
-Imports System.Windows.Forms
-Imports System.Runtime.InteropServices
-Imports ModernUIForm.WinAPI
 Imports System.ComponentModel
+Imports System.Windows.Forms
+Imports ModernUIForm.WinAPI
 
 Public Class TemplateForm
     Private _dwmNCAMargins As MARGINS
@@ -137,6 +136,7 @@ Public Class TemplateForm
 
     End Sub
 
+#Region "Overrides"
     Protected Overrides Sub OnActivated(e As EventArgs)
         CaptionBGCurrent = _CaptionBGActive
         BorderBGCurrent = _BorderBGActive
@@ -158,13 +158,22 @@ Public Class TemplateForm
 
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
         MyBase.OnPaint(e)
+        'Caption brush
         Dim b As New SolidBrush(CaptionBGCurrent)
-        e.Graphics.FillRectangle(b, _dwmNCAMargins.cxLeftWidth, _dwmNCAMargins.cyTopHeight, Width - _dwmNCAMargins.cxLeftWidth - _dwmNCAMargins.cxRightWidth, _captionHeight)
+        'Caption
+        e.Graphics.FillRectangle(b, _
+                                 _dwmNCAMargins.cxLeftWidth, _dwmNCAMargins.cyTopHeight, _
+                                 Me.Width - _dwmNCAMargins.cxLeftWidth - _dwmNCAMargins.cxRightWidth, _captionHeight)
+        'Border brush
         b = New SolidBrush(BorderBGCurrent)
-        e.Graphics.FillRectangle(b, 0, 0, Width, _dwmNCAMargins.cyTopHeight) 'Top border
-        e.Graphics.FillRectangle(b, 0, Height - _dwmNCAMargins.cyBottomHeight, Width, _dwmNCAMargins.cyBottomHeight)  'Bottom border
-        e.Graphics.FillRectangle(b, 0, 0, _dwmNCAMargins.cxLeftWidth, Height) 'Left border
-        e.Graphics.FillRectangle(b, Width - _dwmNCAMargins.cxRightWidth, 0, _dwmNCAMargins.cxRightWidth, Height) 'Right border
+        'Top border
+        e.Graphics.FillRectangle(b, 0, 0, Me.Width, _dwmNCAMargins.cyTopHeight)
+        'Bottom border
+        e.Graphics.FillRectangle(b, 0, Me.Height - _dwmNCAMargins.cyBottomHeight, Me.Width, _dwmNCAMargins.cyBottomHeight)
+        'Left border
+        e.Graphics.FillRectangle(b, 0, 0, _dwmNCAMargins.cxLeftWidth, Me.Height)
+        'Right border
+        e.Graphics.FillRectangle(b, Width - _dwmNCAMargins.cxRightWidth, 0, _dwmNCAMargins.cxRightWidth, Height)
         'e.Graphics.DrawLine(Pens.Red, 0, 0, Width, Height)
         'e.Graphics.DrawRectangle(Pens.Green, _RBT.Width, _RBT.Height, Width - _RBT.Width * 2, Height - _RBT.Height * 2)
     End Sub
@@ -185,7 +194,7 @@ Public Class TemplateForm
         If (m.Msg = Win32Messages.WM_NCCALCSIZE) AndAlso (CType(m.WParam, Boolean) = True) Then
             m.Result = IntPtr.Zero
         ElseIf (m.Msg = Win32Messages.WM_NCHITTEST) AndAlso (m.Result = IntPtr.Zero) Then
-            m.Result = HitTestNCA(m.LParam)
+            m.Result = New IntPtr(HitTestNCA(m.LParam))
         Else
             MyBase.WndProc(m)
         End If
@@ -229,13 +238,15 @@ Public Class TemplateForm
         End If
         MyBase.SetBoundsCore(x, y, width, height, specified)
     End Sub
+#End Region
 
-    Private Function HitTestNCA(lParam As IntPtr) As IntPtr
+#Region "Hit test emulation"
+    Private Function HitTestNCA(lParam As IntPtr) As Integer
         Dim p As New Point(CInt(lParam) And &HFFFF, (CInt(lParam) >> 16) And &HFFFF)
         Return HitTestNCA(p)
     End Function
 
-    Private Function HitTestNCA(CursorPosition As Point) As IntPtr
+    Private Function HitTestNCA(CursorPosition As Point) As Integer
         CursorPosition = CursorPosition - New Size(Me.Location)
         Dim tmpRBT As New Size(0, 0)
         If Me.IsResizable AndAlso (Me.WindowState = FormWindowState.Normal) Then
@@ -247,24 +258,24 @@ Public Class TemplateForm
 
         'Client
         If hitRect.Contains(CursorPosition) Then
-            Return New IntPtr(HitTest.HTCLIENT)
+            Return HitTest.HTCLIENT
         End If
         'Caption
         hitRect.Y = tmpRBT.Height
         hitRect.Height = _captionHeight
         If hitRect.Contains(CursorPosition) Then
-            Return New IntPtr(HitTest.HTCAPTION)
+            Return HitTest.HTCAPTION
         End If
         'Top
         hitRect.Y = 0
         hitRect.Height = tmpRBT.Width
         If hitRect.Contains(CursorPosition) Then
-            Return New IntPtr(HitTest.HTTOP)
+            Return HitTest.HTTOP
         End If
         'Bottom
         hitRect.Y = Height - tmpRBT.Width
         If hitRect.Contains(CursorPosition) Then
-            Return New IntPtr(HitTest.HTBOTTOM)
+            Return HitTest.HTBOTTOM
         End If
         'Left
         hitRect.X = 0
@@ -272,12 +283,12 @@ Public Class TemplateForm
         hitRect.Width = tmpRBT.Width
         hitRect.Height = Height - tmpRBT.Height * 2
         If hitRect.Contains(CursorPosition) Then
-            Return New IntPtr(HitTest.HTLEFT)
+            Return HitTest.HTLEFT
         End If
         'Right
         hitRect.X = Width - tmpRBT.Width
         If hitRect.Contains(CursorPosition) Then
-            Return New IntPtr(HitTest.HTRIGHT)
+            Return HitTest.HTRIGHT
         End If
         'TopLeft
         hitRect.X = 0
@@ -285,67 +296,80 @@ Public Class TemplateForm
         hitRect.Width = tmpRBT.Width
         hitRect.Height = tmpRBT.Height
         If hitRect.Contains(CursorPosition) Then
-            Return New IntPtr(HitTest.HTTOPLEFT)
+            Return HitTest.HTTOPLEFT
         End If
         'TopRight
         hitRect.X = Width - tmpRBT.Width
         If hitRect.Contains(CursorPosition) Then
-            Return New IntPtr(HitTest.HTTOPRIGHT)
+            Return HitTest.HTTOPRIGHT
         End If
         'BottomRight
         hitRect.Y = Height - tmpRBT.Width
         If hitRect.Contains(CursorPosition) Then
-            Return New IntPtr(HitTest.HTBOTTOMRIGHT)
+            Return HitTest.HTBOTTOMRIGHT
         End If
         'BottomLeft
         hitRect.X = 0
         If hitRect.Contains(CursorPosition) Then
-            Return New IntPtr(HitTest.HTBOTTOMLEFT)
+            Return HitTest.HTBOTTOMLEFT
         End If
 
-        Return New IntPtr(HitTest.HTNOWHERE)
+        Return HitTest.HTNOWHERE
 
     End Function
+#End Region
 
-    Private Sub ExtendHitTest_MouseMove(sender As Object, e As MouseEventArgs)
+#Region "Hit testing extension events"
+    Private Sub HisTestingExtension_MouseMove(sender As Object, e As MouseEventArgs)
+        Dim result As Integer = HitTestNCA(Cursor.Position)
         Try
-            Dim result As IntPtr = HitTestNCA(Cursor.Position)
-            ReleaseCapture()
-            If e.Button = Windows.Forms.MouseButtons.Left Then
-                WinAPI.SendMessage(Handle, Win32Messages.WM_NCLBUTTONDOWN, result, Nothing)
-            End If
-
+            Dim c As Control = CType(sender, Control)
             Select Case CInt(result)
-                Case HitTest.HTTOP, HitTest.HTBOTTOM
-                    CType(sender, Control).Cursor = Cursors.SizeNS
-                Case HitTest.HTLEFT, HitTest.HTRIGHT
-                    CType(sender, Control).Cursor = Cursors.SizeWE
-                Case HitTest.HTTOPLEFT, HitTest.HTBOTTOMRIGHT
-                    CType(sender, Control).Cursor = Cursors.SizeNWSE
-                Case HitTest.HTTOPRIGHT, HitTest.HTBOTTOMLEFT
-                    CType(sender, Control).Cursor = Cursors.SizeNESW
-                Case Else
-                    CType(sender, Control).Cursor = Cursors.Default
+                Case HitTest.HTTOP, HitTest.HTBOTTOM : CType(sender, Control).Cursor = Cursors.SizeNS
+                Case HitTest.HTLEFT, HitTest.HTRIGHT : CType(sender, Control).Cursor = Cursors.SizeWE
+                Case HitTest.HTTOPLEFT, HitTest.HTBOTTOMRIGHT : CType(sender, Control).Cursor = Cursors.SizeNWSE
+                Case HitTest.HTTOPRIGHT, HitTest.HTBOTTOMLEFT : CType(sender, Control).Cursor = Cursors.SizeNESW
+                Case HitTest.HTCAPTION : CType(sender, Control).Cursor = Cursors.Default
             End Select
-            Exit Sub
         Catch ex As Exception
             Exit Sub
         End Try
-    End Sub
 
-    Private Sub ExtendHitTest_MouseDoubleClick(sender As Object, e As EventArgs)
-        Dim result As IntPtr = HitTestNCA(Cursor.Position)
         ReleaseCapture()
-        WinAPI.SendMessage(Handle, Win32Messages.WM_NCLBUTTONDBLCLK, result, Nothing)
+        If e.Button = Windows.Forms.MouseButtons.Left Then
+            WinAPI.SendMessage(Handle, Win32Messages.WM_NCLBUTTONDOWN, result, 0)
+        End If
+
+        Exit Sub
     End Sub
 
-    Private Sub ExtendHitTest_MouseLeave(sender As Object, e As EventArgs)
+    Private Sub HisTestingExtension_MouseUp(sender As Object, e As EventArgs)
+        WinAPI.ReleaseCapture()
+        If e.GetType = GetType(MouseEventArgs) AndAlso _
+            CInt(HitTestNCA(Cursor.Position)) = HitTest.HTCAPTION AndAlso
+            CType(e, MouseEventArgs).Button = Windows.Forms.MouseButtons.Right Then
+
+            Dim sysMenu As IntPtr = WinAPI.GetSystemMenu(Me.Handle, False)
+            Dim result As Integer
+            result = WinAPI.TrackPopupMenu(sysMenu, TPM.TPM_RETURNCMD, Cursor.Position.X, Cursor.Position.Y, 0, Me.Handle, New RECT)
+            WinAPI.PostMessage(Me.Handle, Win32Messages.WM_SYSCOMMAND, result, 0)
+        End If
+    End Sub
+
+    Private Sub HisTestingExtension_MouseDoubleClick(sender As Object, e As EventArgs)
+        Dim result As Integer = HitTestNCA(Cursor.Position)
+        WinAPI.SendMessage(Handle, Win32Messages.WM_NCLBUTTONDBLCLK, result, 0)
+    End Sub
+
+    Private Sub HisTestingExtension_MouseLeave(sender As Object, e As EventArgs)
         CType(sender, Control).Cursor = Cursors.Default
     End Sub
 
-    Public Sub AddControlToFormHitTest(c As Control)
-        AddHandler c.MouseMove, AddressOf ExtendHitTest_MouseMove
-        AddHandler c.DoubleClick, AddressOf ExtendHitTest_MouseDoubleClick
-        AddHandler c.MouseLeave, AddressOf ExtendHitTest_MouseLeave
+    Public Sub HitTestingAddControl(c As Control)
+        AddHandler c.MouseMove, AddressOf HisTestingExtension_MouseMove
+        AddHandler c.MouseUp, AddressOf HisTestingExtension_MouseUp
+        AddHandler c.DoubleClick, AddressOf HisTestingExtension_MouseDoubleClick
+        AddHandler c.MouseLeave, AddressOf HisTestingExtension_MouseLeave
     End Sub
+#End Region
 End Class

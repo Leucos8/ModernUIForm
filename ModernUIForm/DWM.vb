@@ -18,7 +18,7 @@ Imports ModernUIForm.WinAPI
 
 Friend Class DWM
     ''' <summary>
-    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/aa969507%28v=vs.85%29.aspx
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/aa969507(v=vs.85).aspx
     ''' </summary>
     ''' <param name="hwnd">Handle to the window.</param>
     ''' <param name="msg">Message.</param>
@@ -32,7 +32,7 @@ Friend Class DWM
 
     ''' <summary>
     ''' Extends the window frame into the client area.
-    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/aa969512%28v=vs.85%29.aspx
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/aa969512(v=vs.85).aspx
     ''' </summary>
     ''' <param name="hWnd">Handle to the window.</param>
     ''' <param name="marInset">Pointer to a MARGINS structure that contains the values for extending the frame.</param>
@@ -42,7 +42,7 @@ Friend Class DWM
     End Function
     ''' <summary>
     ''' Indicates if the DWM is enabled
-    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/aa969518%28v=vs.85%29.aspx
+    ''' http://msdn.microsoft.com/en-us/library/windows/desktop/aa969518(v=vs.85).aspx
     ''' </summary>
     ''' <param name="pfEnabled">Return value, TRUE if DWM is enable, FALSE if not. </param>
     <DllImport("dwmapi.dll")> _

@@ -20,7 +20,7 @@ Public Class TestForm1
         InitializeComponent()
 
         ' Aggiungere le eventuali istruzioni di inizializzazione dopo la chiamata a InitializeComponent().
-        Me.AddControlToFormHitTest(Me.Panel1)
+        Me.HitTestingAddControl(Me.Panel1)
     End Sub
 
 #Region "Form - ControlBox & Resize"
@@ -73,14 +73,14 @@ Public Class TestForm1
             If Me.lastWindowState = FormWindowState.Normal Then
                 Me.ControlBoxMaximize.Image = My.Resources.Window_ButtonMaximize_12x12
                 Me.flpControlBox.Margin = New Padding(0, 0, 6, 0)
-                'Me.Padding = New Padding(1)
+                Me.Padding = New Padding(1)
             ElseIf Me.lastWindowState = FormWindowState.Maximized Then
                 Me.ControlBoxMaximize.Image = My.Resources.Window_ButtonRestore_12x12
                 Me.flpControlBox.Margin = New Padding(0, 0, 3, 0)
-                'Me.Padding = New Padding(Windows.Forms.SystemInformation.FrameBorderSize.Width, _
-                '                         Windows.Forms.SystemInformation.FrameBorderSize.Height, _
-                '                         Windows.Forms.SystemInformation.FrameBorderSize.Width, _
-                '                         Windows.Forms.SystemInformation.FrameBorderSize.Height)
+                Me.Padding = New Padding(Windows.Forms.SystemInformation.FrameBorderSize.Width, _
+                                         Windows.Forms.SystemInformation.FrameBorderSize.Height, _
+                                         Windows.Forms.SystemInformation.FrameBorderSize.Width, _
+                                         Windows.Forms.SystemInformation.FrameBorderSize.Height)
             End If
         End If
     End Sub
