@@ -27,6 +27,7 @@ Public Class TemplateForm
         End Get
         Set(ByVal value As Padding)
             _dwmNCAMargins = New MARGINS(value.Left, value.Top, value.Right, value.Bottom)
+            Me.OnActivated(Nothing)
         End Set
     End Property
 
@@ -49,48 +50,56 @@ Public Class TemplateForm
         End Get
         Set(ByVal value As Integer)
             _captionHeight = value
+            Me.OnActivated(Nothing)
         End Set
     End Property
 
-    Private _CaptionBGActive As Color
+    Private _captionColorActive As Color
     <Description("Sets the caption color when windows is active."), Category("ModernUIForm")>
-    Public Property CaptionBackColorActive() As Color
+    Public Property CaptionColorActive() As Color
         Get
-            Return _CaptionBGActive
+            Return _captionColorActive
         End Get
         Set(ByVal value As Color)
-            _CaptionBGActive = value
+            _captionColorActive = value
+            Me.OnActivated(Nothing)
         End Set
     End Property
-    Private _CaptionBGInactive As Color
+    Private _captionColorInactive As Color
     <Description("Sets the caption color when windows is inactive."), Category("ModernUIForm")>
-    Public Property CaptionBackColorInactive() As Color
+    Public Property CaptionColorInactive() As Color
         Get
-            Return _CaptionBGInactive
+            Return _captionColorInactive
         End Get
         Set(ByVal value As Color)
-            _CaptionBGInactive = value
+            _captionColorInactive = value
+            Me.OnActivated(Nothing)
         End Set
     End Property
 
-    Private _BorderBGActive As Color
+    Private _borderColorActive As Color
     <Description("Sets the border color when windows is active."), Category("ModernUIForm")>
-    Public Property BorderBackColorActive() As Color
+    Public Property BorderColorActive() As Color
         Get
-            Return _BorderBGActive
+            Return _borderColorActive
         End Get
         Set(ByVal value As Color)
-            _BorderBGActive = value
+            _borderColorActive = value
+            Me.OnActivated(Nothing)
         End Set
     End Property
-    Private _BorderBGInactive As Color
+    Private _borderColorInactive As Color
     <Description("Sets the border color when windows is inactive."), Category("ModernUIForm")>
-    Public Property BorderBackColorInactive() As Color
+    Public Property BorderColorInactive() As Color
         Get
-            Return _BorderBGInactive
+            Return _borderColorInactive
         End Get
         Set(ByVal value As Color)
-            _BorderBGInactive = value
+            _borderColorInactive = value
+            Dim HTValues() As HitTest = {HitTest.HTLEFT, HitTest.HTRIGHT, _
+                                 HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
+                                 HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT}
+            Me.OnActivated(Nothing)
         End Set
     End Property
 
@@ -109,8 +118,8 @@ Public Class TemplateForm
         End Get
     End Property
 
-    Private CaptionBGCurrent As Color
-    Private BorderBGCurrent As Color
+    Private CaptionColorCurrent As Color
+    Private BorderColorCurrent As Color
 
     Public Sub New()
         SetStyle(ControlStyles.ResizeRedraw, True)
@@ -123,10 +132,10 @@ Public Class TemplateForm
         _captionHeight = 23
         _RBT = New Size(SystemInformation.HorizontalResizeBorderThickness, SystemInformation.VerticalResizeBorderThickness)
 
-        _CaptionBGActive = SystemColors.ActiveCaption
-        _CaptionBGInactive = SystemColors.InactiveCaption
-        _BorderBGActive = SystemColors.ActiveBorder
-        _BorderBGInactive = SystemColors.InactiveBorder
+        _captionColorActive = SystemColors.ActiveCaption
+        _captionColorInactive = SystemColors.InactiveCaption
+        _borderColorActive = SystemColors.ActiveBorder
+        _borderColorInactive = SystemColors.InactiveBorder
 
         ' Chiamata richiesta dalla finestra di progettazione.
         InitializeComponent()
@@ -138,8 +147,8 @@ Public Class TemplateForm
 
 #Region "Overrides"
     Protected Overrides Sub OnActivated(e As EventArgs)
-        CaptionBGCurrent = _CaptionBGActive
-        BorderBGCurrent = _BorderBGActive
+        CaptionColorCurrent = _captionColorActive
+        BorderColorCurrent = _borderColorActive
 
         If DWM.IsDwmEnabled Then
             DWM.DwmExtendFrameIntoClientArea(Handle, _dwmNCAMargins)
@@ -151,8 +160,8 @@ Public Class TemplateForm
     End Sub
 
     Protected Overrides Sub OnDeactivate(e As EventArgs)
-        CaptionBGCurrent = _CaptionBGInactive
-        BorderBGCurrent = _BorderBGInactive
+        CaptionColorCurrent = _captionColorInactive
+        BorderColorCurrent = _borderColorInactive
         MyBase.OnDeactivate(e)
 
         Me.InvalidateFrame()
@@ -171,11 +180,11 @@ Public Class TemplateForm
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
         MyBase.OnPaint(e)
         'Caption brush
-        Dim b As New SolidBrush(CaptionBGCurrent)
+        Dim b As New SolidBrush(CaptionColorCurrent)
         'Caption
         e.Graphics.FillRectangle(b, Me.GetFrameRectangle(HitTest.HTCAPTION))
         'Border brush
-        b = New SolidBrush(BorderBGCurrent)
+        b = New SolidBrush(BorderColorCurrent)
 
         Dim HTValues() As HitTest = {HitTest.HTLEFT, HitTest.HTRIGHT, _
                                      HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
@@ -265,7 +274,6 @@ Public Class TemplateForm
         For i As Integer = 0 To HTValues.Count - 1
             If Me.GetHitTestRectangle(HTValues(i)).Contains(CursorPosition) Then
                 Return HTValues(i)
-                Exit For
             End If
         Next i
 
@@ -306,6 +314,7 @@ Public Class TemplateForm
     End Sub
 
     Private Sub HitTestingExtension_MouseDoubleClick(sender As Object, e As EventArgs)
+        WinAPI.ReleaseCapture()
         WinAPI.SendMessage(Handle, Win32Messages.WM_NCLBUTTONDBLCLK, HitTestNCA(Cursor.Position), 0)
     End Sub
 

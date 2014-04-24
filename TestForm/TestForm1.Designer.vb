@@ -119,10 +119,10 @@ Partial Class TestForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
-        Me.BorderBackColorActive = System.Drawing.Color.FromArgb(CType(CType(130, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(200, Byte), Integer))
-        Me.BorderBackColorInactive = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(100, Byte), Integer))
-        Me.CaptionBackColorActive = System.Drawing.Color.DarkGray
-        Me.CaptionBackColorInactive = System.Drawing.Color.DarkGray
+        Me.BorderColorActive = System.Drawing.Color.FromArgb(CType(CType(130, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.BorderColorInactive = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(100, Byte), Integer))
+        Me.CaptionColorActive = System.Drawing.Color.DarkGray
+        Me.CaptionColorInactive = System.Drawing.Color.DarkGray
         Me.CaptionHeight = 48
         Me.ClientSize = New System.Drawing.Size(300, 139)
         Me.Controls.Add(Me.Panel1)
