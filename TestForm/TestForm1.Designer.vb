@@ -38,27 +38,106 @@ Partial Class TestForm1
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.flpControlBox = New System.Windows.Forms.FlowLayoutPanel()
+        Me.ControlBoxMinimize = New System.Windows.Forms.Button()
+        Me.ControlBoxMaximize = New System.Windows.Forms.Button()
+        Me.ControlBoxClose = New System.Windows.Forms.Button()
+        Me.Panel1.SuspendLayout()
+        Me.flpControlBox.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.Color.Transparent
+        Me.Panel1.Controls.Add(Me.flpControlBox)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel1.Location = New System.Drawing.Point(4, 4)
+        Me.Panel1.Location = New System.Drawing.Point(1, 1)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(276, 48)
+        Me.Panel1.Size = New System.Drawing.Size(290, 48)
         Me.Panel1.TabIndex = 1
+        '
+        'flpControlBox
+        '
+        Me.flpControlBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.flpControlBox.AutoSize = True
+        Me.flpControlBox.Controls.Add(Me.ControlBoxMinimize)
+        Me.flpControlBox.Controls.Add(Me.ControlBoxMaximize)
+        Me.flpControlBox.Controls.Add(Me.ControlBoxClose)
+        Me.flpControlBox.Location = New System.Drawing.Point(187, 0)
+        Me.flpControlBox.Margin = New System.Windows.Forms.Padding(0, 0, 6, 0)
+        Me.flpControlBox.Name = "flpControlBox"
+        Me.flpControlBox.Size = New System.Drawing.Size(97, 20)
+        Me.flpControlBox.TabIndex = 2
+        Me.flpControlBox.WrapContents = False
+        '
+        'ControlBoxMinimize
+        '
+        Me.ControlBoxMinimize.BackColor = System.Drawing.Color.Transparent
+        Me.ControlBoxMinimize.FlatAppearance.BorderSize = 0
+        Me.ControlBoxMinimize.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(100, Byte), Integer))
+        Me.ControlBoxMinimize.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(130, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.ControlBoxMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.ControlBoxMinimize.Image = Global.TestForm.My.Resources.Resources.Window_ButtonMinimize_12x12
+        Me.ControlBoxMinimize.Location = New System.Drawing.Point(0, 0)
+        Me.ControlBoxMinimize.Margin = New System.Windows.Forms.Padding(0)
+        Me.ControlBoxMinimize.Name = "ControlBoxMinimize"
+        Me.ControlBoxMinimize.Size = New System.Drawing.Size(26, 20)
+        Me.ControlBoxMinimize.TabIndex = 3
+        Me.ControlBoxMinimize.UseVisualStyleBackColor = False
+        '
+        'ControlBoxMaximize
+        '
+        Me.ControlBoxMaximize.BackColor = System.Drawing.Color.Transparent
+        Me.ControlBoxMaximize.FlatAppearance.BorderSize = 0
+        Me.ControlBoxMaximize.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(100, Byte), Integer))
+        Me.ControlBoxMaximize.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(130, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.ControlBoxMaximize.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.ControlBoxMaximize.Image = Global.TestForm.My.Resources.Resources.Window_ButtonMaximize_12x12
+        Me.ControlBoxMaximize.Location = New System.Drawing.Point(26, 0)
+        Me.ControlBoxMaximize.Margin = New System.Windows.Forms.Padding(0)
+        Me.ControlBoxMaximize.Name = "ControlBoxMaximize"
+        Me.ControlBoxMaximize.Size = New System.Drawing.Size(26, 20)
+        Me.ControlBoxMaximize.TabIndex = 2
+        Me.ControlBoxMaximize.UseVisualStyleBackColor = False
+        '
+        'ControlBoxClose
+        '
+        Me.ControlBoxClose.BackColor = System.Drawing.Color.FromArgb(CType(CType(199, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer))
+        Me.ControlBoxClose.FlatAppearance.BorderSize = 0
+        Me.ControlBoxClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(153, Byte), Integer), CType(CType(61, Byte), Integer), CType(CType(61, Byte), Integer))
+        Me.ControlBoxClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(67, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.ControlBoxClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.ControlBoxClose.Image = Global.TestForm.My.Resources.Resources.Window_ButtonCloseW_12x12
+        Me.ControlBoxClose.Location = New System.Drawing.Point(52, 0)
+        Me.ControlBoxClose.Margin = New System.Windows.Forms.Padding(0)
+        Me.ControlBoxClose.Name = "ControlBoxClose"
+        Me.ControlBoxClose.Size = New System.Drawing.Size(45, 20)
+        Me.ControlBoxClose.TabIndex = 1
+        Me.ControlBoxClose.UseVisualStyleBackColor = False
         '
         'TestForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
-        Me.ClientSize = New System.Drawing.Size(284, 238)
+        Me.BorderBackColorActive = System.Drawing.Color.FromArgb(CType(CType(130, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.BorderBackColorInactive = System.Drawing.Color.FromArgb(CType(CType(65, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(100, Byte), Integer))
+        Me.CaptionBackColorActive = System.Drawing.Color.DarkGray
+        Me.CaptionBackColorInactive = System.Drawing.Color.DarkGray
+        Me.ClientSize = New System.Drawing.Size(292, 177)
         Me.Controls.Add(Me.Panel1)
+        Me.DWMMargins = New System.Windows.Forms.Padding(1)
         Me.Name = "TestForm1"
+        Me.Padding = New System.Windows.Forms.Padding(1)
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
+        Me.flpControlBox.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
     Private WithEvents Panel1 As System.Windows.Forms.Panel
+    Private WithEvents flpControlBox As System.Windows.Forms.FlowLayoutPanel
+    Private WithEvents ControlBoxMinimize As System.Windows.Forms.Button
+    Private WithEvents ControlBoxMaximize As System.Windows.Forms.Button
+    Private WithEvents ControlBoxClose As System.Windows.Forms.Button
 
 End Class
