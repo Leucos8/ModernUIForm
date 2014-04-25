@@ -139,7 +139,12 @@ Public Class TestForm1
             Me.ResizeBorderThickness = New Size(CInt(txtResizeBorder.Text), CInt(txtResizeBorder.Text))
             Me.DrawHitRectangles = Me.ckbDrawHitTest.Checked
             Me.CaptionHeight = CInt(Me.txtCaptionHeight.Text)
-            Me.Panel1.Height = CInt(Me.txtCaptionHeight.Text) - Me.DWMMargins.Top + Me.Padding.Top
+            Me.Panel1.Height = CInt(Me.txtCaptionHeight.Text)
+            If DWMMargins.Top > Me.Padding.Top Then
+                Me.Panel1.Height += DWMMargins.Top - Me.Padding.Top
+            Else
+                Me.Panel1.Height -= Me.Padding.Top - DWMMargins.Top
+            End If
             Me.DWMCaption = Me.ckbDWMCaption.Checked
             Me.CaptionColorActive = Color.FromArgb(CInt(Me.txtCaptionActiveColorA.Text), _
                                                    CInt(Me.txtCaptionActiveColorR.Text), _

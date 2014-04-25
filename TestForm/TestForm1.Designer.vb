@@ -74,10 +74,10 @@ Partial Class TestForm1
         Me.txtCaptionInactiveColorA = New System.Windows.Forms.TextBox()
         Me.txtBorderActiveColorA = New System.Windows.Forms.TextBox()
         Me.txtBorderInactiveColorA = New System.Windows.Forms.TextBox()
+        Me.ckbDrawHitTest = New System.Windows.Forms.CheckBox()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.btnAero = New System.Windows.Forms.Button()
-        Me.ckbDrawHitTest = New System.Windows.Forms.CheckBox()
         Me.Panel1.SuspendLayout()
         Me.flpControlBox.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
@@ -91,7 +91,7 @@ Partial Class TestForm1
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(1, 1)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(408, 48)
+        Me.Panel1.Size = New System.Drawing.Size(371, 48)
         Me.Panel1.TabIndex = 0
         '
         'flpControlBox
@@ -101,7 +101,7 @@ Partial Class TestForm1
         Me.flpControlBox.Controls.Add(Me.ControlBoxMinimize)
         Me.flpControlBox.Controls.Add(Me.ControlBoxMaximize)
         Me.flpControlBox.Controls.Add(Me.ControlBoxClose)
-        Me.flpControlBox.Location = New System.Drawing.Point(305, 0)
+        Me.flpControlBox.Location = New System.Drawing.Point(268, 0)
         Me.flpControlBox.Margin = New System.Windows.Forms.Padding(0, 0, 6, 0)
         Me.flpControlBox.Name = "flpControlBox"
         Me.flpControlBox.Size = New System.Drawing.Size(97, 20)
@@ -286,7 +286,7 @@ Partial Class TestForm1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(408, 211)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(371, 226)
         Me.TableLayoutPanel1.TabIndex = 1
         '
         'txtBorderInactiveColorB
@@ -475,6 +475,17 @@ Partial Class TestForm1
         Me.txtBorderInactiveColorA.Size = New System.Drawing.Size(40, 20)
         Me.txtBorderInactiveColorA.TabIndex = 29
         '
+        'ckbDrawHitTest
+        '
+        Me.ckbDrawHitTest.AutoSize = True
+        Me.TableLayoutPanel1.SetColumnSpan(Me.ckbDrawHitTest, 4)
+        Me.ckbDrawHitTest.Location = New System.Drawing.Point(162, 26)
+        Me.ckbDrawHitTest.Name = "ckbDrawHitTest"
+        Me.ckbDrawHitTest.Size = New System.Drawing.Size(139, 17)
+        Me.ckbDrawHitTest.TabIndex = 30
+        Me.ckbDrawHitTest.Text = "DrawHitTestRectangles"
+        Me.ckbDrawHitTest.UseVisualStyleBackColor = True
+        '
         'FlowLayoutPanel1
         '
         Me.FlowLayoutPanel1.AutoSize = True
@@ -483,9 +494,9 @@ Partial Class TestForm1
         Me.FlowLayoutPanel1.Controls.Add(Me.btnRefresh)
         Me.FlowLayoutPanel1.Controls.Add(Me.btnAero)
         Me.FlowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(1, 260)
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(1, 275)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(408, 29)
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(371, 29)
         Me.FlowLayoutPanel1.TabIndex = 5
         '
         'btnRefresh
@@ -507,17 +518,6 @@ Partial Class TestForm1
         Me.btnAero.Text = "Aero values"
         Me.btnAero.UseVisualStyleBackColor = True
         '
-        'ckbDrawHitTest
-        '
-        Me.ckbDrawHitTest.AutoSize = True
-        Me.TableLayoutPanel1.SetColumnSpan(Me.ckbDrawHitTest, 4)
-        Me.ckbDrawHitTest.Location = New System.Drawing.Point(162, 26)
-        Me.ckbDrawHitTest.Name = "ckbDrawHitTest"
-        Me.ckbDrawHitTest.Size = New System.Drawing.Size(139, 17)
-        Me.ckbDrawHitTest.TabIndex = 30
-        Me.ckbDrawHitTest.Text = "DrawHitTestRectangles"
-        Me.ckbDrawHitTest.UseVisualStyleBackColor = True
-        '
         'TestForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -528,7 +528,7 @@ Partial Class TestForm1
         Me.CaptionColorActive = System.Drawing.Color.Gainsboro
         Me.CaptionColorInactive = System.Drawing.Color.LightGray
         Me.CaptionHeight = 48
-        Me.ClientSize = New System.Drawing.Size(410, 290)
+        Me.ClientSize = New System.Drawing.Size(373, 305)
         Me.ControlBox = False
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Controls.Add(Me.FlowLayoutPanel1)

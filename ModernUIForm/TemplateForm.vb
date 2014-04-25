@@ -189,22 +189,27 @@ Public Class TemplateForm
 
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
         MyBase.OnPaint(e)
-        'Caption brush
-        Dim b As New SolidBrush(CaptionColorCurrent)
-        'Caption
-        e.Graphics.FillRectangle(b, Me.GetFrameRectangle(HitTest.HTCAPTION))
+        Dim trect As Rectangle = Rectangle.Intersect(Me.GetFrameRectangle(HitTest.HTCAPTION), e.ClipRectangle)
+        If trect.Height > 0 AndAlso trect.Width > 0 Then
+            'Caption
+            e.Graphics.FillRectangle(New SolidBrush(CaptionColorCurrent), trect)
+        End If
         'Border brush
-        b = New SolidBrush(BorderColorCurrent)
+        Dim b As New SolidBrush(BorderColorCurrent)
 
         Dim HTValues() As HitTest = {HitTest.HTLEFT, HitTest.HTRIGHT, _
                                      HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
                                      HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT}
         For i As Integer = 0 To HTValues.Count - 1
-            e.Graphics.FillRectangle(b, Me.GetFrameRectangle(HTValues(i)))
+            trect = Rectangle.Intersect(Me.GetFrameRectangle(HTValues(i)), e.ClipRectangle)
+            If trect.Height > 0 AndAlso trect.Width > 0 Then
+                e.Graphics.FillRectangle(b, trect)
+            End If
         Next i
+
         If Me.DrawHitRectangles Then
             Dim p As Pen = Pens.LightGreen
-            Dim trect As Rectangle = Me.GetHitTestRectangle(HitTest.HTCAPTION)
+            trect = Me.GetHitTestRectangle(HitTest.HTCAPTION)
             trect.Width -= 1
             trect.Height -= 1
             e.Graphics.DrawRectangle(p, trect)
