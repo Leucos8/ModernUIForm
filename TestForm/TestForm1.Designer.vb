@@ -69,9 +69,15 @@ Partial Class TestForm1
         Me.txtBorderActiveColorG = New System.Windows.Forms.TextBox()
         Me.txtBorderActiveColorB = New System.Windows.Forms.TextBox()
         Me.ckbDoubleBuffered = New System.Windows.Forms.CheckBox()
+        Me.ckbDWMCaption = New System.Windows.Forms.CheckBox()
+        Me.txtCaptionActiveColorA = New System.Windows.Forms.TextBox()
+        Me.txtCaptionInactiveColorA = New System.Windows.Forms.TextBox()
+        Me.txtBorderActiveColorA = New System.Windows.Forms.TextBox()
+        Me.txtBorderInactiveColorA = New System.Windows.Forms.TextBox()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.btnAero = New System.Windows.Forms.Button()
+        Me.ckbDrawHitTest = New System.Windows.Forms.CheckBox()
         Me.Panel1.SuspendLayout()
         Me.flpControlBox.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
@@ -85,7 +91,7 @@ Partial Class TestForm1
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(1, 1)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(415, 48)
+        Me.Panel1.Size = New System.Drawing.Size(408, 48)
         Me.Panel1.TabIndex = 0
         '
         'flpControlBox
@@ -95,7 +101,7 @@ Partial Class TestForm1
         Me.flpControlBox.Controls.Add(Me.ControlBoxMinimize)
         Me.flpControlBox.Controls.Add(Me.ControlBoxMaximize)
         Me.flpControlBox.Controls.Add(Me.ControlBoxClose)
-        Me.flpControlBox.Location = New System.Drawing.Point(312, 0)
+        Me.flpControlBox.Location = New System.Drawing.Point(305, 0)
         Me.flpControlBox.Margin = New System.Windows.Forms.Padding(0, 0, 6, 0)
         Me.flpControlBox.Name = "flpControlBox"
         Me.flpControlBox.Size = New System.Drawing.Size(97, 20)
@@ -193,7 +199,7 @@ Partial Class TestForm1
         'lblPadding
         '
         Me.lblPadding.AutoSize = True
-        Me.lblPadding.Location = New System.Drawing.Point(3, 45)
+        Me.lblPadding.Location = New System.Drawing.Point(3, 46)
         Me.lblPadding.Name = "lblPadding"
         Me.lblPadding.Size = New System.Drawing.Size(64, 13)
         Me.lblPadding.TabIndex = 4
@@ -201,7 +207,7 @@ Partial Class TestForm1
         '
         'txtPadding
         '
-        Me.txtPadding.Location = New System.Drawing.Point(118, 46)
+        Me.txtPadding.Location = New System.Drawing.Point(118, 47)
         Me.txtPadding.Margin = New System.Windows.Forms.Padding(1)
         Me.txtPadding.Name = "txtPadding"
         Me.txtPadding.Size = New System.Drawing.Size(40, 20)
@@ -210,7 +216,7 @@ Partial Class TestForm1
         'lblCaptionHeight
         '
         Me.lblCaptionHeight.AutoSize = True
-        Me.lblCaptionHeight.Location = New System.Drawing.Point(3, 67)
+        Me.lblCaptionHeight.Location = New System.Drawing.Point(3, 68)
         Me.lblCaptionHeight.Name = "lblCaptionHeight"
         Me.lblCaptionHeight.Size = New System.Drawing.Size(77, 13)
         Me.lblCaptionHeight.TabIndex = 6
@@ -218,7 +224,7 @@ Partial Class TestForm1
         '
         'txtCaptionHeight
         '
-        Me.txtCaptionHeight.Location = New System.Drawing.Point(118, 68)
+        Me.txtCaptionHeight.Location = New System.Drawing.Point(118, 69)
         Me.txtCaptionHeight.Margin = New System.Windows.Forms.Padding(1)
         Me.txtCaptionHeight.Name = "txtCaptionHeight"
         Me.txtCaptionHeight.Size = New System.Drawing.Size(40, 20)
@@ -227,7 +233,9 @@ Partial Class TestForm1
         'TableLayoutPanel1
         '
         Me.TableLayoutPanel1.AutoScroll = True
-        Me.TableLayoutPanel1.ColumnCount = 5
+        Me.TableLayoutPanel1.BackColor = System.Drawing.Color.Transparent
+        Me.TableLayoutPanel1.ColumnCount = 6
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
@@ -258,6 +266,12 @@ Partial Class TestForm1
         Me.TableLayoutPanel1.Controls.Add(Me.txtBorderActiveColorG, 2, 6)
         Me.TableLayoutPanel1.Controls.Add(Me.txtBorderActiveColorB, 3, 6)
         Me.TableLayoutPanel1.Controls.Add(Me.ckbDoubleBuffered, 2, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.ckbDWMCaption, 2, 3)
+        Me.TableLayoutPanel1.Controls.Add(Me.txtCaptionActiveColorA, 4, 4)
+        Me.TableLayoutPanel1.Controls.Add(Me.txtCaptionInactiveColorA, 4, 5)
+        Me.TableLayoutPanel1.Controls.Add(Me.txtBorderActiveColorA, 4, 6)
+        Me.TableLayoutPanel1.Controls.Add(Me.txtBorderInactiveColorA, 4, 7)
+        Me.TableLayoutPanel1.Controls.Add(Me.ckbDrawHitTest, 2, 1)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(1, 49)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
@@ -272,12 +286,12 @@ Partial Class TestForm1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(415, 222)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(408, 211)
         Me.TableLayoutPanel1.TabIndex = 1
         '
         'txtBorderInactiveColorB
         '
-        Me.txtBorderInactiveColorB.Location = New System.Drawing.Point(202, 156)
+        Me.txtBorderInactiveColorB.Location = New System.Drawing.Point(202, 158)
         Me.txtBorderInactiveColorB.Margin = New System.Windows.Forms.Padding(1)
         Me.txtBorderInactiveColorB.Name = "txtBorderInactiveColorB"
         Me.txtBorderInactiveColorB.Size = New System.Drawing.Size(40, 20)
@@ -286,7 +300,7 @@ Partial Class TestForm1
         'lblBorderInactiveColor
         '
         Me.lblBorderInactiveColor.AutoSize = True
-        Me.lblBorderInactiveColor.Location = New System.Drawing.Point(3, 155)
+        Me.lblBorderInactiveColor.Location = New System.Drawing.Point(3, 157)
         Me.lblBorderInactiveColor.Name = "lblBorderInactiveColor"
         Me.lblBorderInactiveColor.Size = New System.Drawing.Size(106, 13)
         Me.lblBorderInactiveColor.TabIndex = 20
@@ -294,7 +308,7 @@ Partial Class TestForm1
         '
         'txtBorderInactiveColorG
         '
-        Me.txtBorderInactiveColorG.Location = New System.Drawing.Point(160, 156)
+        Me.txtBorderInactiveColorG.Location = New System.Drawing.Point(160, 158)
         Me.txtBorderInactiveColorG.Margin = New System.Windows.Forms.Padding(1)
         Me.txtBorderInactiveColorG.Name = "txtBorderInactiveColorG"
         Me.txtBorderInactiveColorG.Size = New System.Drawing.Size(40, 20)
@@ -303,7 +317,7 @@ Partial Class TestForm1
         'lblBorderActiveColor
         '
         Me.lblBorderActiveColor.AutoSize = True
-        Me.lblBorderActiveColor.Location = New System.Drawing.Point(3, 133)
+        Me.lblBorderActiveColor.Location = New System.Drawing.Point(3, 135)
         Me.lblBorderActiveColor.Name = "lblBorderActiveColor"
         Me.lblBorderActiveColor.Size = New System.Drawing.Size(98, 13)
         Me.lblBorderActiveColor.TabIndex = 16
@@ -311,7 +325,7 @@ Partial Class TestForm1
         '
         'txtBorderInactiveColorR
         '
-        Me.txtBorderInactiveColorR.Location = New System.Drawing.Point(118, 156)
+        Me.txtBorderInactiveColorR.Location = New System.Drawing.Point(118, 158)
         Me.txtBorderInactiveColorR.Margin = New System.Windows.Forms.Padding(1)
         Me.txtBorderInactiveColorR.Name = "txtBorderInactiveColorR"
         Me.txtBorderInactiveColorR.Size = New System.Drawing.Size(40, 20)
@@ -320,7 +334,7 @@ Partial Class TestForm1
         'lblCaptionActiveColor
         '
         Me.lblCaptionActiveColor.AutoSize = True
-        Me.lblCaptionActiveColor.Location = New System.Drawing.Point(3, 89)
+        Me.lblCaptionActiveColor.Location = New System.Drawing.Point(3, 91)
         Me.lblCaptionActiveColor.Name = "lblCaptionActiveColor"
         Me.lblCaptionActiveColor.Size = New System.Drawing.Size(103, 13)
         Me.lblCaptionActiveColor.TabIndex = 8
@@ -328,7 +342,7 @@ Partial Class TestForm1
         '
         'txtCaptionActiveColorR
         '
-        Me.txtCaptionActiveColorR.Location = New System.Drawing.Point(118, 90)
+        Me.txtCaptionActiveColorR.Location = New System.Drawing.Point(118, 92)
         Me.txtCaptionActiveColorR.Margin = New System.Windows.Forms.Padding(1)
         Me.txtCaptionActiveColorR.Name = "txtCaptionActiveColorR"
         Me.txtCaptionActiveColorR.Size = New System.Drawing.Size(40, 20)
@@ -336,7 +350,7 @@ Partial Class TestForm1
         '
         'txtCaptionActiveColorG
         '
-        Me.txtCaptionActiveColorG.Location = New System.Drawing.Point(160, 90)
+        Me.txtCaptionActiveColorG.Location = New System.Drawing.Point(160, 92)
         Me.txtCaptionActiveColorG.Margin = New System.Windows.Forms.Padding(1)
         Me.txtCaptionActiveColorG.Name = "txtCaptionActiveColorG"
         Me.txtCaptionActiveColorG.Size = New System.Drawing.Size(40, 20)
@@ -344,7 +358,7 @@ Partial Class TestForm1
         '
         'txtCaptionActiveColorB
         '
-        Me.txtCaptionActiveColorB.Location = New System.Drawing.Point(202, 90)
+        Me.txtCaptionActiveColorB.Location = New System.Drawing.Point(202, 92)
         Me.txtCaptionActiveColorB.Margin = New System.Windows.Forms.Padding(1)
         Me.txtCaptionActiveColorB.Name = "txtCaptionActiveColorB"
         Me.txtCaptionActiveColorB.Size = New System.Drawing.Size(40, 20)
@@ -353,7 +367,7 @@ Partial Class TestForm1
         'lblCaptionInactiveColor
         '
         Me.lblCaptionInactiveColor.AutoSize = True
-        Me.lblCaptionInactiveColor.Location = New System.Drawing.Point(3, 111)
+        Me.lblCaptionInactiveColor.Location = New System.Drawing.Point(3, 113)
         Me.lblCaptionInactiveColor.Name = "lblCaptionInactiveColor"
         Me.lblCaptionInactiveColor.Size = New System.Drawing.Size(111, 13)
         Me.lblCaptionInactiveColor.TabIndex = 12
@@ -361,7 +375,7 @@ Partial Class TestForm1
         '
         'txtCaptionInactiveColorR
         '
-        Me.txtCaptionInactiveColorR.Location = New System.Drawing.Point(118, 112)
+        Me.txtCaptionInactiveColorR.Location = New System.Drawing.Point(118, 114)
         Me.txtCaptionInactiveColorR.Margin = New System.Windows.Forms.Padding(1)
         Me.txtCaptionInactiveColorR.Name = "txtCaptionInactiveColorR"
         Me.txtCaptionInactiveColorR.Size = New System.Drawing.Size(40, 20)
@@ -369,7 +383,7 @@ Partial Class TestForm1
         '
         'txtCaptionInactiveColorG
         '
-        Me.txtCaptionInactiveColorG.Location = New System.Drawing.Point(160, 112)
+        Me.txtCaptionInactiveColorG.Location = New System.Drawing.Point(160, 114)
         Me.txtCaptionInactiveColorG.Margin = New System.Windows.Forms.Padding(1)
         Me.txtCaptionInactiveColorG.Name = "txtCaptionInactiveColorG"
         Me.txtCaptionInactiveColorG.Size = New System.Drawing.Size(40, 20)
@@ -377,7 +391,7 @@ Partial Class TestForm1
         '
         'txtCaptionInactiveColorB
         '
-        Me.txtCaptionInactiveColorB.Location = New System.Drawing.Point(202, 112)
+        Me.txtCaptionInactiveColorB.Location = New System.Drawing.Point(202, 114)
         Me.txtCaptionInactiveColorB.Margin = New System.Windows.Forms.Padding(1)
         Me.txtCaptionInactiveColorB.Name = "txtCaptionInactiveColorB"
         Me.txtCaptionInactiveColorB.Size = New System.Drawing.Size(40, 20)
@@ -385,7 +399,7 @@ Partial Class TestForm1
         '
         'txtBorderActiveColorR
         '
-        Me.txtBorderActiveColorR.Location = New System.Drawing.Point(118, 134)
+        Me.txtBorderActiveColorR.Location = New System.Drawing.Point(118, 136)
         Me.txtBorderActiveColorR.Margin = New System.Windows.Forms.Padding(1)
         Me.txtBorderActiveColorR.Name = "txtBorderActiveColorR"
         Me.txtBorderActiveColorR.Size = New System.Drawing.Size(40, 20)
@@ -393,7 +407,7 @@ Partial Class TestForm1
         '
         'txtBorderActiveColorG
         '
-        Me.txtBorderActiveColorG.Location = New System.Drawing.Point(160, 134)
+        Me.txtBorderActiveColorG.Location = New System.Drawing.Point(160, 136)
         Me.txtBorderActiveColorG.Margin = New System.Windows.Forms.Padding(1)
         Me.txtBorderActiveColorG.Name = "txtBorderActiveColorG"
         Me.txtBorderActiveColorG.Size = New System.Drawing.Size(40, 20)
@@ -401,7 +415,7 @@ Partial Class TestForm1
         '
         'txtBorderActiveColorB
         '
-        Me.txtBorderActiveColorB.Location = New System.Drawing.Point(202, 134)
+        Me.txtBorderActiveColorB.Location = New System.Drawing.Point(202, 136)
         Me.txtBorderActiveColorB.Margin = New System.Windows.Forms.Padding(1)
         Me.txtBorderActiveColorB.Name = "txtBorderActiveColorB"
         Me.txtBorderActiveColorB.Size = New System.Drawing.Size(40, 20)
@@ -410,7 +424,7 @@ Partial Class TestForm1
         'ckbDoubleBuffered
         '
         Me.ckbDoubleBuffered.AutoSize = True
-        Me.TableLayoutPanel1.SetColumnSpan(Me.ckbDoubleBuffered, 3)
+        Me.TableLayoutPanel1.SetColumnSpan(Me.ckbDoubleBuffered, 4)
         Me.ckbDoubleBuffered.Location = New System.Drawing.Point(162, 3)
         Me.ckbDoubleBuffered.Name = "ckbDoubleBuffered"
         Me.ckbDoubleBuffered.Size = New System.Drawing.Size(100, 17)
@@ -418,16 +432,60 @@ Partial Class TestForm1
         Me.ckbDoubleBuffered.Text = "DoubleBuffered"
         Me.ckbDoubleBuffered.UseVisualStyleBackColor = True
         '
+        'ckbDWMCaption
+        '
+        Me.ckbDWMCaption.AutoSize = True
+        Me.TableLayoutPanel1.SetColumnSpan(Me.ckbDWMCaption, 4)
+        Me.ckbDWMCaption.Location = New System.Drawing.Point(162, 71)
+        Me.ckbDWMCaption.Name = "ckbDWMCaption"
+        Me.ckbDWMCaption.Size = New System.Drawing.Size(90, 17)
+        Me.ckbDWMCaption.TabIndex = 25
+        Me.ckbDWMCaption.Text = "DWMCaption"
+        Me.ckbDWMCaption.UseVisualStyleBackColor = True
+        '
+        'txtCaptionActiveColorA
+        '
+        Me.txtCaptionActiveColorA.Location = New System.Drawing.Point(244, 92)
+        Me.txtCaptionActiveColorA.Margin = New System.Windows.Forms.Padding(1)
+        Me.txtCaptionActiveColorA.Name = "txtCaptionActiveColorA"
+        Me.txtCaptionActiveColorA.Size = New System.Drawing.Size(40, 20)
+        Me.txtCaptionActiveColorA.TabIndex = 26
+        '
+        'txtCaptionInactiveColorA
+        '
+        Me.txtCaptionInactiveColorA.Location = New System.Drawing.Point(244, 114)
+        Me.txtCaptionInactiveColorA.Margin = New System.Windows.Forms.Padding(1)
+        Me.txtCaptionInactiveColorA.Name = "txtCaptionInactiveColorA"
+        Me.txtCaptionInactiveColorA.Size = New System.Drawing.Size(40, 20)
+        Me.txtCaptionInactiveColorA.TabIndex = 27
+        '
+        'txtBorderActiveColorA
+        '
+        Me.txtBorderActiveColorA.Location = New System.Drawing.Point(244, 136)
+        Me.txtBorderActiveColorA.Margin = New System.Windows.Forms.Padding(1)
+        Me.txtBorderActiveColorA.Name = "txtBorderActiveColorA"
+        Me.txtBorderActiveColorA.Size = New System.Drawing.Size(40, 20)
+        Me.txtBorderActiveColorA.TabIndex = 28
+        '
+        'txtBorderInactiveColorA
+        '
+        Me.txtBorderInactiveColorA.Location = New System.Drawing.Point(244, 158)
+        Me.txtBorderInactiveColorA.Margin = New System.Windows.Forms.Padding(1)
+        Me.txtBorderInactiveColorA.Name = "txtBorderInactiveColorA"
+        Me.txtBorderInactiveColorA.Size = New System.Drawing.Size(40, 20)
+        Me.txtBorderInactiveColorA.TabIndex = 29
+        '
         'FlowLayoutPanel1
         '
         Me.FlowLayoutPanel1.AutoSize = True
+        Me.FlowLayoutPanel1.BackColor = System.Drawing.Color.Transparent
         Me.FlowLayoutPanel1.Controls.Add(Me.btnApply)
         Me.FlowLayoutPanel1.Controls.Add(Me.btnRefresh)
         Me.FlowLayoutPanel1.Controls.Add(Me.btnAero)
         Me.FlowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(1, 271)
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(1, 260)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(415, 29)
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(408, 29)
         Me.FlowLayoutPanel1.TabIndex = 5
         '
         'btnRefresh
@@ -449,6 +507,17 @@ Partial Class TestForm1
         Me.btnAero.Text = "Aero values"
         Me.btnAero.UseVisualStyleBackColor = True
         '
+        'ckbDrawHitTest
+        '
+        Me.ckbDrawHitTest.AutoSize = True
+        Me.TableLayoutPanel1.SetColumnSpan(Me.ckbDrawHitTest, 4)
+        Me.ckbDrawHitTest.Location = New System.Drawing.Point(162, 26)
+        Me.ckbDrawHitTest.Name = "ckbDrawHitTest"
+        Me.ckbDrawHitTest.Size = New System.Drawing.Size(139, 17)
+        Me.ckbDrawHitTest.TabIndex = 30
+        Me.ckbDrawHitTest.Text = "DrawHitTestRectangles"
+        Me.ckbDrawHitTest.UseVisualStyleBackColor = True
+        '
         'TestForm1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -459,7 +528,7 @@ Partial Class TestForm1
         Me.CaptionColorActive = System.Drawing.Color.Gainsboro
         Me.CaptionColorInactive = System.Drawing.Color.LightGray
         Me.CaptionHeight = 48
-        Me.ClientSize = New System.Drawing.Size(417, 301)
+        Me.ClientSize = New System.Drawing.Size(410, 290)
         Me.ControlBox = False
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Controls.Add(Me.FlowLayoutPanel1)
@@ -511,8 +580,14 @@ Partial Class TestForm1
     Private WithEvents txtBorderInactiveColorR As System.Windows.Forms.TextBox
     Private WithEvents lblBorderInactiveColor As System.Windows.Forms.Label
     Private WithEvents ckbDoubleBuffered As System.Windows.Forms.CheckBox
-    Friend WithEvents FlowLayoutPanel1 As System.Windows.Forms.FlowLayoutPanel
-    Friend WithEvents btnRefresh As System.Windows.Forms.Button
-    Friend WithEvents btnAero As System.Windows.Forms.Button
+    Private WithEvents FlowLayoutPanel1 As System.Windows.Forms.FlowLayoutPanel
+    Private WithEvents btnRefresh As System.Windows.Forms.Button
+    Private WithEvents btnAero As System.Windows.Forms.Button
+    Private WithEvents ckbDWMCaption As System.Windows.Forms.CheckBox
+    Private WithEvents txtCaptionActiveColorA As System.Windows.Forms.TextBox
+    Private WithEvents txtCaptionInactiveColorA As System.Windows.Forms.TextBox
+    Private WithEvents txtBorderActiveColorA As System.Windows.Forms.TextBox
+    Private WithEvents txtBorderInactiveColorA As System.Windows.Forms.TextBox
+    Friend WithEvents ckbDrawHitTest As System.Windows.Forms.CheckBox
 
 End Class

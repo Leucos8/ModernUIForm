@@ -39,6 +39,7 @@ Public Class TemplateForm
         End Get
         Set(ByVal value As Size)
             _RBT = value
+            Me.OnActivated(Nothing)
         End Set
     End Property
 
@@ -53,6 +54,12 @@ Public Class TemplateForm
             Me.OnActivated(Nothing)
         End Set
     End Property
+
+    <Description("The caption is considered in DWM margins. DoubleBuffered must be false."), Category("ModernUIForm")>
+    Public Property DWMCaption As Boolean = False
+
+    <Description("Hit test rectangles will be drawn on the form."), Category("ModernUIForm")>
+    Public Property DrawHitRectangles As Boolean = False
 
     Private _captionColorActive As Color
     <Description("Sets the caption color when windows is active."), Category("ModernUIForm")>
@@ -96,9 +103,6 @@ Public Class TemplateForm
         End Get
         Set(ByVal value As Color)
             _borderColorInactive = value
-            Dim HTValues() As HitTest = {HitTest.HTLEFT, HitTest.HTRIGHT, _
-                                 HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
-                                 HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT}
             Me.OnActivated(Nothing)
         End Set
     End Property
@@ -122,7 +126,7 @@ Public Class TemplateForm
     Private BorderColorCurrent As Color
 
     Public Sub New()
-        SetStyle(ControlStyles.ResizeRedraw, True)
+        Me.SetStyle(ControlStyles.ResizeRedraw, True)
 
         ' Default property values
         _dwmNCAMargins = New MARGINS(SystemInformation.FrameBorderSize.Width, SystemInformation.FrameBorderSize.Height, _
@@ -130,6 +134,8 @@ Public Class TemplateForm
         Me.Padding = Me.DWMMargins
 
         _captionHeight = 23
+        DWMCaption = False
+        DrawHitRectangles = False
         _RBT = New Size(SystemInformation.HorizontalResizeBorderThickness, SystemInformation.VerticalResizeBorderThickness)
 
         _captionColorActive = SystemColors.ActiveCaption
@@ -151,7 +157,11 @@ Public Class TemplateForm
         BorderColorCurrent = _borderColorActive
 
         If DWM.IsDwmEnabled Then
-            DWM.DwmExtendFrameIntoClientArea(Handle, _dwmNCAMargins)
+            Dim tmpMargins As MARGINS = _dwmNCAMargins
+            If Me.DWMCaption Then
+                tmpMargins.cyTopHeight += _captionHeight
+            End If
+            DWM.DwmExtendFrameIntoClientArea(Me.Handle, tmpMargins)
         End If
 
         MyBase.OnActivated(e)
@@ -192,8 +202,27 @@ Public Class TemplateForm
         For i As Integer = 0 To HTValues.Count - 1
             e.Graphics.FillRectangle(b, Me.GetFrameRectangle(HTValues(i)))
         Next i
-        'e.Graphics.DrawLine(Pens.Red, 0, 0, Width, Height)
-        'e.Graphics.DrawRectangle(Pens.Green, _RBT.Width, _RBT.Height, Width - _RBT.Width * 2, Height - _RBT.Height * 2)
+        If Me.DrawHitRectangles Then
+            Dim p As Pen = Pens.LightGreen
+            Dim trect As Rectangle = Me.GetHitTestRectangle(HitTest.HTCAPTION)
+            trect.Width -= 1
+            trect.Height -= 1
+            e.Graphics.DrawRectangle(p, trect)
+            p = Pens.Green
+            trect = Me.GetHitTestRectangle(HitTest.HTCLIENT)
+            trect.Width -= 1
+            trect.Height -= 1
+            e.Graphics.DrawRectangle(p, trect)
+            p = Pens.Blue
+            HTValues = {HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
+                        HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT}
+            For i As Integer = 0 To HTValues.Count - 1
+                trect = Me.GetHitTestRectangle(HTValues(i))
+                trect.Width -= 1
+                trect.Height -= 1
+                e.Graphics.DrawRectangle(p, trect)
+            Next i
+        End If
     End Sub
 
     ''' <summary>
@@ -291,7 +320,7 @@ Public Class TemplateForm
             Case HitTest.HTLEFT, HitTest.HTRIGHT : CType(sender, Control).Cursor = Cursors.SizeWE
             Case HitTest.HTTOPLEFT, HitTest.HTBOTTOMRIGHT : CType(sender, Control).Cursor = Cursors.SizeNWSE
             Case HitTest.HTTOPRIGHT, HitTest.HTBOTTOMLEFT : CType(sender, Control).Cursor = Cursors.SizeNESW
-            Case HitTest.HTCAPTION : CType(sender, Control).Cursor = Cursors.Default
+            Case Else : CType(sender, Control).Cursor = Cursors.Default
         End Select
 
         If e.Button = Windows.Forms.MouseButtons.Left Then
@@ -341,7 +370,30 @@ Public Class TemplateForm
             tmpRBT = New Padding(_RBT.Width, _RBT.Height, _RBT.Width, _RBT.Height)
         End If
 
-        Return Me.GetFormRectangle(area, tmpRBT)
+        Select Case area
+            Case HitTest.HTCAPTION
+                Dim tmpRectangle As New Rectangle(tmpRBT.Left, tmpRBT.Top, Me.Width - (tmpRBT.Left + tmpRBT.Right), CaptionHeight)
+                If tmpRBT.Top > Me._dwmNCAMargins.cyTopHeight Then
+                    tmpRectangle.Height -= Me._RBT.Height - Me._dwmNCAMargins.cyTopHeight
+                Else
+                    tmpRectangle.Height += Me._dwmNCAMargins.cyTopHeight - Me._RBT.Height
+                End If
+                Return tmpRectangle
+            Case HitTest.HTCLIENT
+                Dim tmpRectangle As New Rectangle(tmpRBT.Left, tmpRBT.Top + CaptionHeight, Me.Width - (tmpRBT.Left + tmpRBT.Right), _
+                                                  Me.Height - (CaptionHeight + tmpRBT.Top + tmpRBT.Bottom))
+                If tmpRBT.Top > Me._dwmNCAMargins.cyTopHeight Then
+                    tmpRectangle.Y -= Me._RBT.Height - Me._dwmNCAMargins.cyTopHeight
+                    tmpRectangle.Height += Me._RBT.Height - Me._dwmNCAMargins.cyTopHeight
+                Else
+                    tmpRectangle.Y += Me._dwmNCAMargins.cyTopHeight - Me._RBT.Height
+                    tmpRectangle.Height -= Me._dwmNCAMargins.cyTopHeight - Me._RBT.Height
+                End If
+                Return tmpRectangle
+            Case Else
+                Return Me.GetFormRectangle(area, tmpRBT)
+        End Select
+
     End Function
 
     Private Function GetFormRectangle(area As HitTest, bt As Padding) As Rectangle

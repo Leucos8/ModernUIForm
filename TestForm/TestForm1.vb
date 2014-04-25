@@ -106,23 +106,29 @@ Public Class TestForm1
         Me.txtDWMMargins.Text = Me.DWMMargins.All.ToString
         Me.ckbDoubleBuffered.Checked = Me.DoubleBuffered
         Me.txtResizeBorder.Text = Me.ResizeBorderThickness.Width.ToString
+        Me.ckbDrawHitTest.Checked = Me.DrawHitRectangles
         Me.txtCaptionHeight.Text = Me.CaptionHeight.ToString
+        Me.ckbDWMCaption.Checked = Me.DWMCaption
 
         Me.txtCaptionActiveColorR.Text = Me.CaptionColorActive.R.ToString
         Me.txtCaptionActiveColorG.Text = Me.CaptionColorActive.G.ToString
         Me.txtCaptionActiveColorB.Text = Me.CaptionColorActive.B.ToString
+        Me.txtCaptionActiveColorA.Text = Me.CaptionColorActive.A.ToString
 
         Me.txtCaptionInactiveColorR.Text = Me.CaptionColorInactive.R.ToString
         Me.txtCaptionInactiveColorG.Text = Me.CaptionColorInactive.G.ToString
         Me.txtCaptionInactiveColorB.Text = Me.CaptionColorInactive.B.ToString
+        Me.txtCaptionInactiveColorA.Text = Me.CaptionColorInactive.A.ToString
 
         Me.txtBorderActiveColorR.Text = Me.BorderColorActive.R.ToString
         Me.txtBorderActiveColorG.Text = Me.BorderColorActive.G.ToString
         Me.txtBorderActiveColorB.Text = Me.BorderColorActive.B.ToString
+        Me.txtBorderActiveColorA.Text = Me.BorderColorActive.A.ToString
 
         Me.txtBorderInactiveColorR.Text = Me.BorderColorInactive.R.ToString
         Me.txtBorderInactiveColorG.Text = Me.BorderColorInactive.G.ToString
         Me.txtBorderInactiveColorB.Text = Me.BorderColorInactive.B.ToString
+        Me.txtBorderInactiveColorA.Text = Me.BorderColorInactive.A.ToString
     End Sub
 
     Private Sub ValuesApply()
@@ -131,20 +137,26 @@ Public Class TestForm1
             Me.DWMMargins = New Padding(CInt(txtDWMMargins.Text))
             Me.DoubleBuffered = Me.ckbDoubleBuffered.Checked
             Me.ResizeBorderThickness = New Size(CInt(txtResizeBorder.Text), CInt(txtResizeBorder.Text))
+            Me.DrawHitRectangles = Me.ckbDrawHitTest.Checked
             Me.CaptionHeight = CInt(Me.txtCaptionHeight.Text)
-            Me.Panel1.Height = CInt(Me.txtCaptionHeight.Text)
-            Me.CaptionColorActive = Color.FromArgb(CInt(Me.txtCaptionActiveColorR.Text), _
+            Me.Panel1.Height = CInt(Me.txtCaptionHeight.Text) - Me.DWMMargins.Top + Me.Padding.Top
+            Me.DWMCaption = Me.ckbDWMCaption.Checked
+            Me.CaptionColorActive = Color.FromArgb(CInt(Me.txtCaptionActiveColorA.Text), _
+                                                   CInt(Me.txtCaptionActiveColorR.Text), _
                                                    CInt(Me.txtCaptionActiveColorG.Text), _
                                                    CInt(Me.txtCaptionActiveColorB.Text))
-            Me.CaptionColorInactive = Color.FromArgb(CInt(Me.txtCaptionInactiveColorR.Text), _
-                                                   CInt(Me.txtCaptionInactiveColorG.Text), _
-                                                   CInt(Me.txtCaptionInactiveColorB.Text))
-            Me.BorderColorActive = Color.FromArgb(CInt(Me.txtBorderActiveColorR.Text), _
-                                                   CInt(Me.txtBorderActiveColorG.Text), _
-                                                   CInt(Me.txtBorderActiveColorB.Text))
-            Me.BorderColorInactive = Color.FromArgb(CInt(Me.txtBorderInactiveColorR.Text), _
-                                                   CInt(Me.txtBorderInactiveColorG.Text), _
-                                                   CInt(Me.txtBorderInactiveColorB.Text))
+            Me.CaptionColorInactive = Color.FromArgb(CInt(Me.txtCaptionInactiveColorA.Text), _
+                                                     CInt(Me.txtCaptionInactiveColorR.Text), _
+                                                     CInt(Me.txtCaptionInactiveColorG.Text), _
+                                                     CInt(Me.txtCaptionInactiveColorB.Text))
+            Me.BorderColorActive = Color.FromArgb(CInt(Me.txtBorderActiveColorA.Text), _
+                                                  CInt(Me.txtBorderActiveColorR.Text), _
+                                                  CInt(Me.txtBorderActiveColorG.Text), _
+                                                  CInt(Me.txtBorderActiveColorB.Text))
+            Me.BorderColorInactive = Color.FromArgb(CInt(Me.txtBorderInactiveColorA.Text), _
+                                                    CInt(Me.txtBorderInactiveColorR.Text), _
+                                                    CInt(Me.txtBorderInactiveColorG.Text), _
+                                                    CInt(Me.txtBorderInactiveColorB.Text))
 
             Me.ControlBoxMaximize.FlatAppearance.MouseOverBackColor = Me.BorderColorActive
             Me.ControlBoxMaximize.FlatAppearance.MouseDownBackColor = Me.BorderColorInactive
@@ -170,10 +182,14 @@ Public Class TestForm1
         Me.Padding = New Padding(8)
         Me.DWMMargins = New Padding(8)
         Me.ResizeBorderThickness = New Size(8, 8)
+        Me.CaptionColorActive = Color.Black
+        Me.CaptionColorInactive = Color.Black
+        Me.DWMCaption = True
         Me.BorderColorActive = Color.Black
         Me.BorderColorInactive = Color.Black
         Me.DoubleBuffered = False
 
         Me.ValuesLoad()
-    End Sub
+		Me.ValuesApply()
+End Sub
 End Class
