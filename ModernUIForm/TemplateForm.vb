@@ -133,7 +133,7 @@ Public Class TemplateForm
                                      SystemInformation.FrameBorderSize.Width, SystemInformation.FrameBorderSize.Height)
         Me.Padding = Me.DWMMargins
 
-        _captionHeight = 23
+        _captionHeight = SystemInformation.CaptionHeight
         DWMCaption = False
         DrawHitRectangles = False
         _RBT = New Size(SystemInformation.HorizontalResizeBorderThickness, SystemInformation.VerticalResizeBorderThickness)
