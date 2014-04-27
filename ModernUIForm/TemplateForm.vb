@@ -373,31 +373,33 @@ Public Class TemplateForm
         Dim tmpRBT As New Padding(0)
         If Me.IsResizable AndAlso (Me.WindowState = FormWindowState.Normal) Then
             tmpRBT = New Padding(_RBT.Width, _RBT.Height, _RBT.Width, _RBT.Height)
+            Select Case area
+                Case HitTest.HTCAPTION
+                    Dim tmpRectangle As New Rectangle(tmpRBT.Left, tmpRBT.Top, Me.Width - (tmpRBT.Left + tmpRBT.Right), CaptionHeight)
+                    If tmpRBT.Top > Me._dwmNCAMargins.cyTopHeight Then
+                        tmpRectangle.Height -= Me._RBT.Height - Me._dwmNCAMargins.cyTopHeight
+                    Else
+                        tmpRectangle.Height += Me._dwmNCAMargins.cyTopHeight - Me._RBT.Height
+                    End If
+                    Return tmpRectangle
+                Case HitTest.HTCLIENT
+                    Dim tmpRectangle As New Rectangle(tmpRBT.Left, tmpRBT.Top + CaptionHeight, Me.Width - (tmpRBT.Left + tmpRBT.Right), _
+                                                      Me.Height - (CaptionHeight + tmpRBT.Top + tmpRBT.Bottom))
+                    If tmpRBT.Top > Me._dwmNCAMargins.cyTopHeight Then
+                        tmpRectangle.Y -= Me._RBT.Height - Me._dwmNCAMargins.cyTopHeight
+                        tmpRectangle.Height += Me._RBT.Height - Me._dwmNCAMargins.cyTopHeight
+                    Else
+                        tmpRectangle.Y += Me._dwmNCAMargins.cyTopHeight - Me._RBT.Height
+                        tmpRectangle.Height -= Me._dwmNCAMargins.cyTopHeight - Me._RBT.Height
+                    End If
+                    Return tmpRectangle
+                Case Else
+                    Return Me.GetFormRectangle(area, tmpRBT)
+            End Select
+        Else
+            Return Me.GetFormRectangle(area, tmpRBT)
         End If
 
-        Select Case area
-            Case HitTest.HTCAPTION
-                Dim tmpRectangle As New Rectangle(tmpRBT.Left, tmpRBT.Top, Me.Width - (tmpRBT.Left + tmpRBT.Right), CaptionHeight)
-                If tmpRBT.Top > Me._dwmNCAMargins.cyTopHeight Then
-                    tmpRectangle.Height -= Me._RBT.Height - Me._dwmNCAMargins.cyTopHeight
-                Else
-                    tmpRectangle.Height += Me._dwmNCAMargins.cyTopHeight - Me._RBT.Height
-                End If
-                Return tmpRectangle
-            Case HitTest.HTCLIENT
-                Dim tmpRectangle As New Rectangle(tmpRBT.Left, tmpRBT.Top + CaptionHeight, Me.Width - (tmpRBT.Left + tmpRBT.Right), _
-                                                  Me.Height - (CaptionHeight + tmpRBT.Top + tmpRBT.Bottom))
-                If tmpRBT.Top > Me._dwmNCAMargins.cyTopHeight Then
-                    tmpRectangle.Y -= Me._RBT.Height - Me._dwmNCAMargins.cyTopHeight
-                    tmpRectangle.Height += Me._RBT.Height - Me._dwmNCAMargins.cyTopHeight
-                Else
-                    tmpRectangle.Y += Me._dwmNCAMargins.cyTopHeight - Me._RBT.Height
-                    tmpRectangle.Height -= Me._dwmNCAMargins.cyTopHeight - Me._RBT.Height
-                End If
-                Return tmpRectangle
-            Case Else
-                Return Me.GetFormRectangle(area, tmpRBT)
-        End Select
 
     End Function
 
