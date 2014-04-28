@@ -17,6 +17,7 @@ Imports System.Drawing
 Imports System.ComponentModel
 Imports System.Windows.Forms
 Imports ModernUIForm.WinAPI
+Imports System.Runtime.InteropServices
 
 Public Class TemplateForm
     Private _dwmNCAMargins As MARGINS
@@ -27,7 +28,7 @@ Public Class TemplateForm
         End Get
         Set(ByVal value As Padding)
             _dwmNCAMargins = New MARGINS(value.Left, value.Top, value.Right, value.Bottom)
-            Me.OnActivated(Nothing)
+            Me.Refresh()
         End Set
     End Property
 
@@ -39,10 +40,11 @@ Public Class TemplateForm
         End Get
         Set(ByVal value As Size)
             _RBT = value
-            Me.OnActivated(Nothing)
+            Me.Refresh()
         End Set
     End Property
 
+    'Caption properties and related values.
     Private _captionHeight As Integer
     <Description("Sets a the caption height for hit testing."), Category("ModernUIForm")>
     Public Property CaptionHeight() As Integer
@@ -51,15 +53,12 @@ Public Class TemplateForm
         End Get
         Set(ByVal value As Integer)
             _captionHeight = value
-            Me.OnActivated(Nothing)
+            Me.OnActivated(New EventArgs)
         End Set
     End Property
 
-    <Description("The caption is considered in DWM margins. DoubleBuffered must be false."), Category("ModernUIForm")>
+    <Description("The caption is considered in DWM margins."), Category("ModernUIForm")>
     Public Property DWMCaption As Boolean = False
-
-    <Description("Hit test rectangles will be drawn on the form."), Category("ModernUIForm")>
-    Public Property DrawHitRectangles As Boolean = False
 
     Private _captionColorActive As Color
     <Description("Sets the caption color when windows is active."), Category("ModernUIForm")>
@@ -69,7 +68,7 @@ Public Class TemplateForm
         End Get
         Set(ByVal value As Color)
             _captionColorActive = value
-            Me.OnActivated(Nothing)
+            Me.OnActivated(New EventArgs)
         End Set
     End Property
     Private _captionColorInactive As Color
@@ -80,10 +79,13 @@ Public Class TemplateForm
         End Get
         Set(ByVal value As Color)
             _captionColorInactive = value
-            Me.OnActivated(Nothing)
+            Me.OnActivated(New EventArgs)
         End Set
     End Property
+    'Stores the current color of the caption
+    Private CaptionColorCurrent As Color
 
+    'Border properties and related values
     Private _borderColorActive As Color
     <Description("Sets the border color when windows is active."), Category("ModernUIForm")>
     Public Property BorderColorActive() As Color
@@ -92,7 +94,7 @@ Public Class TemplateForm
         End Get
         Set(ByVal value As Color)
             _borderColorActive = value
-            Me.OnActivated(Nothing)
+            Me.OnActivated(New EventArgs)
         End Set
     End Property
     Private _borderColorInactive As Color
@@ -103,17 +105,22 @@ Public Class TemplateForm
         End Get
         Set(ByVal value As Color)
             _borderColorInactive = value
-            Me.OnActivated(Nothing)
+            Me.OnActivated(New EventArgs)
         End Set
     End Property
+
+    Private BorderColorCurrent As Color
+
+    <Description("Hit test rectangles will be drawn on the form."), Category("ModernUIForm")>
+    Public Property DrawHitRectangles As Boolean = False
 
     Private ReadOnly Property IsResizable() As Boolean
         Get
             Select Case FormBorderStyle
                 Case Windows.Forms.FormBorderStyle.Sizable, Windows.Forms.FormBorderStyle.SizableToolWindow
                     Return True
-                Case Windows.Forms.FormBorderStyle.Fixed3D, Windows.Forms.FormBorderStyle.FixedDialog, _
-                    Windows.Forms.FormBorderStyle.FixedSingle, Windows.Forms.FormBorderStyle.FixedToolWindow, _
+                Case Windows.Forms.FormBorderStyle.FixedSingle, Windows.Forms.FormBorderStyle.Fixed3D, _
+                    Windows.Forms.FormBorderStyle.FixedDialog, Windows.Forms.FormBorderStyle.FixedToolWindow, _
                     Windows.Forms.FormBorderStyle.None
                     Return False
                 Case Else
@@ -122,20 +129,13 @@ Public Class TemplateForm
         End Get
     End Property
 
-    Private CaptionColorCurrent As Color
-    Private BorderColorCurrent As Color
-
     Public Sub New()
-        Me.SetStyle(ControlStyles.ResizeRedraw, True)
-
         ' Default property values
         _dwmNCAMargins = New MARGINS(SystemInformation.FrameBorderSize.Width, SystemInformation.FrameBorderSize.Height, _
                                      SystemInformation.FrameBorderSize.Width, SystemInformation.FrameBorderSize.Height)
-        Me.Padding = Me.DWMMargins
-
         _captionHeight = SystemInformation.CaptionHeight
-        DWMCaption = False
-        DrawHitRectangles = False
+        Me.DWMCaption = False
+        Me.DrawHitRectangles = False
         _RBT = New Size(SystemInformation.HorizontalResizeBorderThickness, SystemInformation.VerticalResizeBorderThickness)
 
         _captionColorActive = SystemColors.ActiveCaption
@@ -147,14 +147,14 @@ Public Class TemplateForm
         InitializeComponent()
 
         ' Aggiungere le eventuali istruzioni di inizializzazione dopo la chiamata a InitializeComponent().
-        DoubleBuffered = True
+        Me.DoubleBuffered = True
 
     End Sub
 
 #Region "Overrides"
     Protected Overrides Sub OnActivated(e As EventArgs)
-        CaptionColorCurrent = _captionColorActive
-        BorderColorCurrent = _borderColorActive
+        Me.CaptionColorCurrent = _captionColorActive
+        Me.BorderColorCurrent = _borderColorActive
 
         If DWM.IsDwmEnabled Then
             Dim tmpMargins As MARGINS = _dwmNCAMargins
@@ -163,36 +163,36 @@ Public Class TemplateForm
             End If
             DWM.DwmExtendFrameIntoClientArea(Me.Handle, tmpMargins)
         End If
+        Me.InvalidateFrame({HitTest.HTCAPTION, _
+                            HitTest.HTLEFT, HitTest.HTRIGHT, _
+                            HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
+                            HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT})
 
         MyBase.OnActivated(e)
-
-        Me.InvalidateFrame()
     End Sub
 
     Protected Overrides Sub OnDeactivate(e As EventArgs)
         CaptionColorCurrent = _captionColorInactive
         BorderColorCurrent = _borderColorInactive
+        Me.InvalidateFrame({HitTest.HTCAPTION, _
+                            HitTest.HTLEFT, HitTest.HTRIGHT, _
+                            HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
+                            HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT})
         MyBase.OnDeactivate(e)
-
-        Me.InvalidateFrame()
     End Sub
 
-    Private Sub InvalidateFrame()
-        Dim HTValues() As HitTest = {HitTest.HTCAPTION, _
-                                     HitTest.HTLEFT, HitTest.HTRIGHT, _
-                                     HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
-                                     HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT}
-        For i As Integer = 0 To HTValues.Count - 1
-            Me.Invalidate(Me.GetFrameRectangle(HTValues(i)))
+    Private Sub InvalidateFrame(pHTValues() As HitTest)
+        For i As Integer = 0 To pHTValues.Count - 1
+            Me.Invalidate(Me.GetFrameRectangle(pHTValues(i)))
         Next i
     End Sub
 
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
         MyBase.OnPaint(e)
-        Dim trect As Rectangle = Rectangle.Intersect(Me.GetFrameRectangle(HitTest.HTCAPTION), e.ClipRectangle)
-        If trect.Height > 0 AndAlso trect.Width > 0 Then
+        Dim tRect As Rectangle = Rectangle.Intersect(Me.GetFrameRectangle(HitTest.HTCAPTION), e.ClipRectangle)
+        If tRect.Height > 0 AndAlso tRect.Width > 0 Then
             'Caption
-            e.Graphics.FillRectangle(New SolidBrush(CaptionColorCurrent), trect)
+            e.Graphics.FillRectangle(New SolidBrush(CaptionColorCurrent), tRect)
         End If
         'Border brush
         Dim b As New SolidBrush(BorderColorCurrent)
@@ -201,31 +201,31 @@ Public Class TemplateForm
                                      HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
                                      HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT}
         For i As Integer = 0 To HTValues.Count - 1
-            trect = Rectangle.Intersect(Me.GetFrameRectangle(HTValues(i)), e.ClipRectangle)
-            If trect.Height > 0 AndAlso trect.Width > 0 Then
-                e.Graphics.FillRectangle(b, trect)
+            tRect = Rectangle.Intersect(Me.GetFrameRectangle(HTValues(i)), e.ClipRectangle)
+            If tRect.Height > 0 AndAlso tRect.Width > 0 Then
+                e.Graphics.FillRectangle(b, tRect)
             End If
         Next i
 
         If Me.DrawHitRectangles Then
             Dim p As Pen = Pens.LightGreen
-            trect = Me.GetHitTestRectangle(HitTest.HTCAPTION)
-            trect.Width -= 1
-            trect.Height -= 1
-            e.Graphics.DrawRectangle(p, trect)
+            tRect = Me.GetHitTestRectangle(HitTest.HTCAPTION)
+            tRect.Width -= 1
+            tRect.Height -= 1
+            e.Graphics.DrawRectangle(p, tRect)
             p = Pens.Green
-            trect = Me.GetHitTestRectangle(HitTest.HTCLIENT)
-            trect.Width -= 1
-            trect.Height -= 1
-            e.Graphics.DrawRectangle(p, trect)
+            tRect = Me.GetHitTestRectangle(HitTest.HTCLIENT)
+            tRect.Width -= 1
+            tRect.Height -= 1
+            e.Graphics.DrawRectangle(p, tRect)
             p = Pens.Blue
             HTValues = {HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
                         HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT}
             For i As Integer = 0 To HTValues.Count - 1
-                trect = Me.GetHitTestRectangle(HTValues(i))
-                trect.Width -= 1
-                trect.Height -= 1
-                e.Graphics.DrawRectangle(p, trect)
+                tRect = Me.GetHitTestRectangle(HTValues(i))
+                tRect.Width -= 1
+                tRect.Height -= 1
+                e.Graphics.DrawRectangle(p, tRect)
             Next i
         End If
     End Sub
@@ -243,9 +243,21 @@ Public Class TemplateForm
             Exit Sub
         End If
 
-        If (m.Msg = Win32Messages.WM_NCCALCSIZE) AndAlso (CType(m.WParam, Boolean) = True) Then
+        If (m.Msg = Win32Messages.WM_NCCALCSIZE) AndAlso (CType(m.WParam, Boolean)) Then
+            Dim ncc As WinAPI.NCCALCSIZE_PARAMS = DirectCast(Marshal.PtrToStructure(m.LParam, GetType(WinAPI.NCCALCSIZE_PARAMS)),  _
+                                                             WinAPI.NCCALCSIZE_PARAMS)
+            Dim sc As Screen = Screen.FromHandle(Me.Handle)
+            If ncc.rect0.right > sc.WorkingArea.Width AndAlso _
+                ncc.rect0.bottom > sc.WorkingArea.Height Then
+                ncc.rect0.left += SystemInformation.HorizontalResizeBorderThickness - _dwmNCAMargins.cxLeftWidth
+                ncc.rect0.top += SystemInformation.VerticalResizeBorderThickness - _dwmNCAMargins.cyTopHeight
+                ncc.rect0.right -= SystemInformation.HorizontalResizeBorderThickness - _dwmNCAMargins.cxRightWidth
+                ncc.rect0.bottom -= SystemInformation.VerticalResizeBorderThickness - _dwmNCAMargins.cyBottomHeight
+                Marshal.StructureToPtr(ncc, m.LParam, False)
+            End If
+
             m.Result = IntPtr.Zero
-        ElseIf (m.Msg = Win32Messages.WM_NCHITTEST) AndAlso (m.Result = IntPtr.Zero) Then
+        ElseIf (m.Msg = Win32Messages.WM_NCHITTEST) AndAlso CInt(m.Result) = 0 Then
             m.Result = New IntPtr(HitTestNCA(m.LParam))
         Else
             MyBase.WndProc(m)
@@ -293,12 +305,12 @@ Public Class TemplateForm
 #End Region
 
 #Region "Hit test emulation"
-    Private Function HitTestNCA(lParam As IntPtr) As Integer
+    Private Function HitTestNCA(lParam As IntPtr) As HitTest
         Dim p As New Point(CInt(lParam) And &HFFFF, (CInt(lParam) >> 16) And &HFFFF)
         Return HitTestNCA(p)
     End Function
 
-    Private Function HitTestNCA(CursorPosition As Point) As Integer
+    Private Function HitTestNCA(CursorPosition As Point) As HitTest
         CursorPosition = CursorPosition - New Size(Me.Location)
 
         Dim HTValues() As HitTest = {HitTest.HTCLIENT, HitTest.HTCAPTION, _
@@ -319,13 +331,13 @@ Public Class TemplateForm
 #Region "Hit testing extension events"
     Private Sub HitTestingExtension_MouseMove(sender As Object, e As MouseEventArgs)
         Dim result As Integer = HitTestNCA(Cursor.Position)
-        Dim c As Control = CType(sender, Control)
+        Dim c As Control = DirectCast(sender, Control)
         Select Case result
             Case HitTest.HTTOP, HitTest.HTBOTTOM : CType(sender, Control).Cursor = Cursors.SizeNS
             Case HitTest.HTLEFT, HitTest.HTRIGHT : CType(sender, Control).Cursor = Cursors.SizeWE
             Case HitTest.HTTOPLEFT, HitTest.HTBOTTOMRIGHT : CType(sender, Control).Cursor = Cursors.SizeNWSE
             Case HitTest.HTTOPRIGHT, HitTest.HTBOTTOMLEFT : CType(sender, Control).Cursor = Cursors.SizeNESW
-            Case Else : CType(sender, Control).Cursor = Cursors.Default
+            Case Else : DirectCast(sender, Control).Cursor = Cursors.Default
         End Select
 
         If e.Button = Windows.Forms.MouseButtons.Left Then
@@ -335,16 +347,17 @@ Public Class TemplateForm
     End Sub
 
     Private Sub HitTestingExtension_MouseUp(sender As Object, e As EventArgs)
+        WinAPI.ReleaseCapture()
         If e.GetType = GetType(MouseEventArgs) AndAlso _
-            CInt(HitTestNCA(Cursor.Position)) = HitTest.HTCAPTION AndAlso
-            CType(e, MouseEventArgs).Button = Windows.Forms.MouseButtons.Right Then
+            Me.HitTestNCA(Cursor.Position) = HitTest.HTCAPTION AndAlso
+            DirectCast(e, MouseEventArgs).Button = Windows.Forms.MouseButtons.Right Then
 
             Dim sysMenu As IntPtr = WinAPI.GetSystemMenu(Me.Handle, False)
-            Dim result As Integer
-            result = WinAPI.TrackPopupMenu(sysMenu, TPM.TPM_RETURNCMD, Cursor.Position.X, Cursor.Position.Y, 0, Me.Handle, New RECT)
-            WinAPI.PostMessage(Me.Handle, Win32Messages.WM_SYSCOMMAND, result, 0)
+            If Not (sysMenu = IntPtr.Zero) Then
+                Dim returnCmd As Integer = WinAPI.TrackPopupMenu(sysMenu, TPM.TPM_RETURNCMD, Cursor.Position.X, Cursor.Position.Y, 0, Me.Handle, New RECT)
+                WinAPI.PostMessage(Me.Handle, Win32Messages.WM_SYSCOMMAND, returnCmd, 0)
+            End If
         End If
-        WinAPI.ReleaseCapture()
     End Sub
 
     Private Sub HitTestingExtension_MouseDoubleClick(sender As Object, e As EventArgs)
@@ -353,7 +366,7 @@ Public Class TemplateForm
     End Sub
 
     Private Sub HitTestingExtension_MouseLeave(sender As Object, e As EventArgs)
-        CType(sender, Control).Cursor = Cursors.Default
+        DirectCast(sender, Control).Cursor = Cursors.Default
     End Sub
 
     Public Sub HitTestingAddControl(c As Control)
@@ -365,11 +378,11 @@ Public Class TemplateForm
 #End Region
 
 #Region "GetRectangle"
-    Friend Function GetFrameRectangle(area As HitTest) As Rectangle
+    Private Function GetFrameRectangle(area As HitTest) As Rectangle
         Return Me.GetFormRectangle(area, Me.DWMMargins)
     End Function
 
-    Friend Function GetHitTestRectangle(area As HitTest) As Rectangle
+    Private Function GetHitTestRectangle(area As HitTest) As Rectangle
         Dim tmpRBT As New Padding(0)
         If Me.IsResizable AndAlso (Me.WindowState = FormWindowState.Normal) Then
             tmpRBT = New Padding(_RBT.Width, _RBT.Height, _RBT.Width, _RBT.Height)

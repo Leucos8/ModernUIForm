@@ -177,6 +177,7 @@ Public Class TestForm1
 
     Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click
         Me.ValuesApply()
+        Me.Refresh()
     End Sub
 
     Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click

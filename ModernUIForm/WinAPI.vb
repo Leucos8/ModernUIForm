@@ -37,15 +37,15 @@ Friend Class WinAPI
         Friend rect0 As RECT
         Friend rect1 As RECT
         Friend rect2 As RECT
-        Friend lppos As WINDOWPOS
+        Friend lppos As IntPtr
     End Structure
     ''' <summary>http://msdn.microsoft.com/en-us/library/windows/desktop/dd162897(v=vs.85).aspx</summary>
     <StructLayout(LayoutKind.Sequential)> _
     Friend Structure RECT
-        Friend left As Long
-        Friend top As Long
-        Friend right As Long
-        Friend bottom As Long
+        Friend left As Integer
+        Friend top As Integer
+        Friend right As Integer
+        Friend bottom As Integer
     End Structure
     ''' <summary>http://msdn.microsoft.com/en-us/library/windows/desktop/ms632612(v=vs.85).aspx</summary>
     <StructLayout(LayoutKind.Sequential)> _
