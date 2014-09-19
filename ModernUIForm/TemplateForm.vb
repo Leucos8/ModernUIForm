@@ -162,22 +162,27 @@ Public Class TemplateForm
                 tmpMargins.cyTopHeight += _captionHeight
             End If
             DWM.DwmExtendFrameIntoClientArea(Me.Handle, tmpMargins)
+            Me.InvalidateFrame({HitTest.HTCAPTION, _
+                                HitTest.HTLEFT, HitTest.HTRIGHT, _
+                                HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
+                                HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT})
+        Else
+            Me.Refresh()
         End If
-        Me.InvalidateFrame({HitTest.HTCAPTION, _
-                            HitTest.HTLEFT, HitTest.HTRIGHT, _
-                            HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
-                            HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT})
-
         MyBase.OnActivated(e)
     End Sub
 
     Protected Overrides Sub OnDeactivate(e As EventArgs)
         CaptionColorCurrent = _captionColorInactive
         BorderColorCurrent = _borderColorInactive
-        Me.InvalidateFrame({HitTest.HTCAPTION, _
-                            HitTest.HTLEFT, HitTest.HTRIGHT, _
-                            HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
-                            HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT})
+        If DWM.IsDwmEnabled Then
+            Me.InvalidateFrame({HitTest.HTCAPTION, _
+                                HitTest.HTLEFT, HitTest.HTRIGHT, _
+                                HitTest.HTTOP, HitTest.HTTOPLEFT, HitTest.HTTOPRIGHT, _
+                                HitTest.HTBOTTOM, HitTest.HTBOTTOMLEFT, HitTest.HTBOTTOMRIGHT})
+        Else
+            Me.Refresh()
+        End If
         MyBase.OnDeactivate(e)
     End Sub
 
